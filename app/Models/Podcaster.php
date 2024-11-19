@@ -5,17 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Padcast extends Model
+class Podcaster extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'title',
-        'description',
-        'audio',
+        'name',
+        'email',
+        'password',
         'image',
-        'duration',
-        'category_id',
-        'podcaster_id'
+        'google_id',
+        'facebook_id'
     ];
 }
