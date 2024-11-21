@@ -31,6 +31,16 @@ Route::group(['prefix' => 'auth' ], function() {
     });
 });
 
+Route::get('/crud', function () {
+    return view('crud');
+});
+Route::get('/crud/add', function () {
+    return view('crud-add');
+});
+Route::get('/crud/update', function () {
+    return view('crud-update');
+});
+
 Route::get('/podcast/{id}', function () {
     return view('podcast.single-podcast');
 });

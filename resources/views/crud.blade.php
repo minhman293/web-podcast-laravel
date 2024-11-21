@@ -68,13 +68,18 @@
 
     <div class="container pt-5 hero">
       <div class="row align-items-center text-center text-md-left">
-        
-        <div class="col-lg-4">
-          <h1 class="mb-3 display-3">Tell Your Story to the World</h1>
-          <p>Join with us! Login or Register. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Delectus, ex!</p>
+        <div class="col-lg-6">
+          <h1 class="mb-3 display-3">LE HA BINH</h1>
+          <p>Below is your podcast that you uploaded, you can add, delete, update them when ever you want !</p>
+          <div class="text-left mb-4">
+            <p class=""> If you want to update your profile</p>
+            <a href="" class="btn btn-primary">
+              <i class="fas fa-user-edit mr-2"></i>Update Profile
+            </a>
+          </div>
         </div>
-        <div class="col-lg-8">
-          <img src="{{ asset('assets/images/1x/asset-1.png') }}" alt="Image" class="img-fluid">    
+        <div class="col-lg-6">
+          <img src="{{ asset('assets/images/1x/user_img.jpg') }}" alt="Image" class="img-fluid">    
         </div>
       </div>
     </div>
@@ -84,70 +89,32 @@
       <div class="container">
 
         <div class="row">
-          <div class="col-lg-3">
-            <div class="featured-user  mb-5 mb-lg-0">
-              <h3 class="mb-4">Popular Podcaster</h3>
-              <ul class="list-unstyled">
-                <li>
-                  <a href="#" class="d-flex align-items-center">
-                    <img src="{{ asset('assets/images/person_1.jpg') }}" alt="Image" class="img-fluid mr-2">
-                    <div class="podcaster">
-                      <span class="d-block">Claire Stanford</span>
-                      <span class="small">32,420 podcasts</span>
-                    </div>
-                  </a>
-                </li>
-                <li>
-                  <a href="#" class="d-flex align-items-center">
-                    <img src="{{ asset('assets/images/person_2.jpg') }}" alt="Image" class="img-fluid mr-2">
-                    <div class="podcaster">
-                      <span class="d-block">Dianne Winston</span>
-                      <span class="small">12,381 podcasts</span>
-                    </div>
-                  </a>
-                </li>
-                <li>
-                  <a href="#" class="d-flex align-items-center">
-                    <img src="{{ asset('assets/images/person_3.jpg') }}" alt="Image" class="img-fluid mr-2">
-                    <div class="podcaster">
-                      <span class="d-block">Borris Larry</span>
-                      <span class="small">9,291 podcasts</span>
-                    </div>
-                  </a>
-                </li>
-                <li>
-                  <a href="#" class="d-flex align-items-center">
-                    <img src="{{ asset('assets/images/person_4.jpg') }}" alt="Image" class="img-fluid mr-2">
-                    <div class="podcaster">
-                      <span class="d-block">Garry Smith</span>
-                      <span class="small">3,291 podcasts</span>
-                    </div>
-                  </a>
-                </li>
-                <li>
-                  <a href="#" class="d-flex align-items-center">
-                    <img src="{{ asset('assets/images/person_5.jpg') }}" alt="Image" class="img-fluid mr-2">
-                    <div class="podcaster">
-                      <span class="d-block">Gerson Stack</span>
-                      <span class="small">1,092 podcasts</span>
-                    </div>
-                  </a>
-                </li>
-                <li>
-                  <a href="#" class="d-flex align-items-center">
-                    <img src="{{ asset('assets/images/person_6.jpg') }}" alt="Image" class="img-fluid mr-2">
-                    <div class="podcaster">
-                      <span class="d-block">Jenna Stone</span>
-                      <span class="small">911 podcasts</span>
-                    </div>
-                  </a>
-                </li>
-              </ul>
+
+          <div class="col-lg-9-crud">
+
+            <!-- Search Form -->
+            <div class="d-flex justify-content-between mb-3">
+              <form action="" method="GET" class="flex-grow-1 mr-4 mt-2" data-aos="fade-up">
+                <input class="form-control w-100" type="search" name="search" placeholder="Search Podcasts" aria-label="Search" value="{{ request('search') }}">
+              </form>
+              <a href="crud/add" class="btn btn-success" data-aos="fade-up">Add New Podcast</a>
             </div>
-          </div>
+            <div class="d-block d-md-flex podcast-entry bg-white mb-5" data-aos="fade-up">
+                <div class="image" style="background-image: url('{{ asset('assets/images/img_1.jpg') }}');"></div>
+                <div class="text">
 
-          <div class="col-lg-9">
+                  <h3 class="font-weight-light"><a href="single-post.html">Episode 08: How To Create Web Page Using Bootstrap 4</a></h3>
+                  <div class="text-white mb-3"><span class="text-black-opacity-05"><small>By Mike Smith <span class="sep">/</span> 16 September 2017 <span class="sep">/</span> 1:30:20</small></span></div>
 
+                  <div class="player">
+                    <audio id="player2" preload="none" controls style="max-width: 100%">
+                      <source src="http://www.largesound.com/ashborytour/sound/AshboryBYU.mp3" type="audio/mp3">
+                      </audio>
+                  </div>
+                  <button type="button" class="btn btn-danger delete-button mt-3">Delete</button>
+                  <button type="button" class="btn btn-info delete-button mt-3">Update</button>
+                </div>
+              </div>
 
             <div class="d-block d-md-flex podcast-entry bg-white mb-5" data-aos="fade-up">
               <div class="image" style="background-image: url('{{ asset('assets/images/img_1.jpg') }}');"></div>
@@ -156,15 +123,15 @@
                 <h3 class="font-weight-light"><a href="single-post.html">Episode 08: How To Create Web Page Using Bootstrap 4</a></h3>
                 <div class="text-white mb-3"><span class="text-black-opacity-05"><small>By Mike Smith <span class="sep">/</span> 16 September 2017 <span class="sep">/</span> 1:30:20</small></span></div>
 
-
                 <div class="player">
                   <audio id="player2" preload="none" controls style="max-width: 100%">
                     <source src="http://www.largesound.com/ashborytour/sound/AshboryBYU.mp3" type="audio/mp3">
                     </audio>
-                  </div>
-
                 </div>
+                <button type="button" class="btn btn-danger delete-button mt-3">Delete</button>
+                <button type="button" class="btn btn-info delete-button mt-3">Update</button>
               </div>
+            </div>
 
 
               <div class="d-block d-md-flex podcast-entry bg-white mb-5" data-aos="fade-up">
@@ -179,7 +146,8 @@
                       <source src="http://www.largesound.com/ashborytour/sound/AshboryBYU.mp3" type="audio/mp3">
                       </audio>
                     </div>
-
+                    <button type="button" class="btn btn-danger delete-button mt-3">Delete</button>
+                    <button type="button" class="btn btn-info delete-button mt-3">Update</button>
                   </div>
                 </div>
 
@@ -197,6 +165,8 @@
                         <source src="http://www.largesound.com/ashborytour/sound/AshboryBYU.mp3" type="audio/mp3">
                         </audio>
                       </div>
+                      <button type="button" class="btn btn-danger delete-button mt-3">Delete</button>
+                      <button type="button" class="btn btn-info delete-button mt-3">Update</button>
                     </div>
                   </div>
 
@@ -214,6 +184,8 @@
                           <source src="http://www.largesound.com/ashborytour/sound/AshboryBYU.mp3" type="audio/mp3">
                           </audio>
                         </div>
+                        <button type="button" class="btn btn-danger delete-button mt-3">Delete</button>
+                        <button type="button" class="btn btn-info delete-button mt-3">Update</button>
                       </div>
                     </div>
 
@@ -231,6 +203,8 @@
                             <source src="http://www.largesound.com/ashborytour/sound/AshboryBYU.mp3" type="audio/mp3">
                             </audio>
                           </div>
+                          <button type="button" class="btn btn-danger delete-button mt-3">Delete</button>
+                          <button type="button" class="btn btn-info delete-button mt-3">Update</button>
                         </div>
                       </div>
 
