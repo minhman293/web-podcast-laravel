@@ -1,0 +1,38 @@
+.flex {
+    display: flex;
+    align-items: center;
+    gap: 1em;
+}
+
+.grid-3 {
+    display: grid;
+    grid-template-columns: 1fr 3fr 1fr;
+    align-items: center;
+    gap: 1em;
+}
+
+.profile_page {
+    margin: 0.5em;
+    margin-left: 4em;
+    
+}
+.profile_page__image img {
+    height: 7em;
+    width: 7em;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.profile_page__image button {
+    background: transparent;
+    border-radius: .25em;
+    cursor: pointer;
+}
+
+.profile_page__image {
+    padding-bottom: 0.5em;
+}
+.profile_page__edit_name {
+    color: dodgerblue !important;
+    font-weight: bold;
+}
