@@ -69,8 +69,8 @@
     <div class="container pt-5 hero">
       <div class="row align-items-center text-center text-md-left">
         <div class="col-lg-6">
-          <h1 class="mb-3 display-3">Update Your Podcast</h1>
-          <p>You can update needed infomation of your podcast below</p>
+          <h1 class="mb-3 display-3">Add Your Podcast</h1>
+          <p>Please insert all requested infomation of your podcast below</p>
         </div>
         <div class="col-lg-6">
           <img src="{{ asset('assets/images/1x/asset-1.png') }}" alt="Image" class="img-fluid">    
@@ -87,182 +87,69 @@
           <div class="col-lg-8">
 
             <div class="container pt-5">
-              <form action="" method="POST" enctype="multipart/form-data">
-                <div class="form-group">
-                  <label for="title">Podcast Title</label>
-                  <input type="text" class="form-control" id="title" name="title" placeholder="Enter podcast title">
-                </div>
-                <div class="form-group">
-                  <label for="description">Podcast Description</label>
-                  <input type="text" class="form-control" id="description" name="description" placeholder="Enter podcast description">
-                </div>
-                <div class="form-group">
-                  <label for="author">Podcast Author</label>
-                  <input type="text" class="form-control" id="author" name="author" placeholder="Enter podcast author">
-                </div>
-                <div class="form-group">
-                  <label for="date">Podcast Date</label>
-                  <input type="date" class="form-control" id="date" value="{{ date('Y-m-d') }}"  name="date">
-                </div>
-                <div class="form-group">
-                  <label for="duration">Duration</label>
-                  <input type="text" class="form-control" id="duration" name="duration" placeholder="Enter duration">
-                </div>
-                <div class="form-group">
-                  <label for="image">Podcast Image</label>
-                  <input type="file" class="form-control-file" id="image" name="image">
-                </div>
-                <div class="form-group">
-                  <label for="audio">Podcast Audio</label>
-                  <input type="file" class="form-control-file" id="audio" name="audio">
-                </div>
-                <div class="d-flex justify-content-center mb-4">
-                  <button type="submit" class="btn btn-primary">Add Podcast</button>
-                </div>
+             
+              <form action="{{ route('podcast.updatePodcast', $podcast->id) }}" method="POST" enctype="multipart/form-data">
+                  @csrf
+                  @method('PUT')
+                  
+                  <div class="form-group">
+                      <label for="title">Podcast Title</label>
+                      <input type="text" class="form-control" id="title" name="title" value="{{ $podcast->title }}" required>
+                  </div>
+                  
+                  <div class="form-group">
+                      <label for="description">Podcast Description</label>
+                      <textarea class="form-control" id="description" name="description" required>{{ $podcast->description }}</textarea>
+                  </div>
+                  
+                  <div class="form-group">
+                      <label for="author">Podcast Author</label>
+                      <input type="text" class="form-control" id="author" name="author" value="{{ $podcast->author }}" required>
+                  </div>
+
+                  <div class="form-group">
+                      <label for="category_id">Category</label>
+                      <select class="form-control" id="category_id" name="category_id" required>
+                          @foreach($categories as $category)
+                              <option value="{{ $category->id }}" {{ $podcast->category_id == $category->id ? 'selected' : '' }}>
+                                  {{ $category->name }}
+                              </option>
+                          @endforeach
+                      </select>
+                  </div>
+
+                  <div class="form-group">
+                      <label for="duration">Duration (in seconds)</label>
+                      <input type="number" class="form-control" id="duration" name="duration" value="{{ $podcast->duration }}" required>
+                  </div>
+
+                  <div class="form-group">
+                      <label for="audio">New Podcast Audio File (optional)</label>
+                      <input type="file" class="form-control-file" id="audio" name="audio" accept="audio/mp3,audio/wav,audio/ogg">
+                      <small class="form-text text-muted">Maximum file size: 50MB. Leave empty to keep existing audio.</small>
+                      <div class="mt-2">Current audio: {{ $podcast->audio }}</div>
+                  </div>
+
+                  <div class="form-group">
+                      <label for="image">New Podcast Image (optional)</label>
+                      <input type="file" class="form-control-file" id="image" name="image" accept="image/*">
+                      <small class="form-text text-muted">Leave empty to keep existing image.</small>
+                      @if($podcast->image)
+                          <div class="mt-2">
+                              <img src="{{ asset('storage/podcasts/images/' . $podcast->image) }}" alt="Current image" style="max-width: 200px">
+                          </div>
+                      @endif
+                  </div>
+
+                  <div class="d-flex justify-content-center mb-4">
+                      <button type="submit" class="btn btn-primary">Update Podcast</button>
+                  </div>
               </form>
             </div>
-            <!-- Search Form -->
           
           </div>
         </div>
       </div>
-
-    <!-- <div class="site-section">
-      <div class="container" data-aos="fade-up">
-        <div class="row mb-5">
-          <div class="col-md-12 text-center">
-            <h2 class="font-weight-bold text-black">Behind The Mic</h2>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-6 col-lg-4 mb-5 mb-lg-5">
-            <div class="team-member">
-
-              <img src="/images/person_1.jpg") alt="Image" class="img-fluid">
-
-              <div class="text">
-
-                <h2 class="mb-2 font-weight-light h4">Megan Smith</h2>
-                <span class="d-block mb-2 text-white-opacity-05">Creative Director</span>
-                <p class="mb-4">Lorem ipsum dolor sit amet consectetur adipisicing elit ullam reprehenderit nemo.</p>
-                <p>
-                  <a href="#" class="text-white p-2"><span class="icon-facebook"></span></a>
-                  <a href="#" class="text-white p-2"><span class="icon-twitter"></span></a>
-                  <a href="#" class="text-white p-2"><span class="icon-linkedin"></span></a>
-                </p>
-              </div>
-
-            </div>
-          </div>
-
-          <div class="col-md-6 col-lg-4 mb-5 mb-lg-5">
-            <div class="team-member">
-
-              <img src="{{ asset('assets/images/person_2.jpg') }}" alt="Image" class="img-fluid">
-
-              <div class="text">
-
-                <h2 class="mb-2 font-weight-light h4">Brooke Cagle</h2>
-                <span class="d-block mb-2 text-white-opacity-05">Creative Director</span>
-                <p class="mb-4">Lorem ipsum dolor sit amet consectetur adipisicing elit ullam reprehenderit nemo.</p>
-                <p>
-                  <a href="#" class="text-white p-2"><span class="icon-facebook"></span></a>
-                  <a href="#" class="text-white p-2"><span class="icon-twitter"></span></a>
-                  <a href="#" class="text-white p-2"><span class="icon-linkedin"></span></a>
-                </p>
-              </div>
-
-            </div>
-          </div>
-
-          <div class="col-md-6 col-lg-4 mb-5 mb-lg-5">
-            <div class="team-member">
-
-              <img src="{{ asset('assets/images/person_3.jpg') }}" alt="Image" class="img-fluid">
-
-              <div class="text">
-
-                <h2 class="mb-2 font-weight-light h4">Philip Martin</h2>
-                <span class="d-block mb-2 text-white-opacity-05">Creative Director</span>
-                <p class="mb-4">Lorem ipsum dolor sit amet consectetur adipisicing elit ullam reprehenderit nemo.</p>
-                <p>
-                  <a href="#" class="text-white p-2"><span class="icon-facebook"></span></a>
-                  <a href="#" class="text-white p-2"><span class="icon-twitter"></span></a>
-                  <a href="#" class="text-white p-2"><span class="icon-linkedin"></span></a>
-                </p>
-              </div>
-
-            </div>
-          </div>
-
-          <div class="col-md-6 col-lg-4 mb-5 mb-lg-5">
-            <div class="team-member">
-
-              <img src="{{ asset('assets/images/person_4.jpg') }}" alt="Image" class="img-fluid">
-
-              <div class="text">
-
-                <h2 class="mb-2 font-weight-light h4">Steven Ericson</h2>
-                <span class="d-block mb-2 text-white-opacity-05">Creative Director</span>
-                <p class="mb-4">Lorem ipsum dolor sit amet consectetur adipisicing elit ullam reprehenderit nemo.</p>
-                <p>
-                  <a href="#" class="text-white p-2"><span class="icon-facebook"></span></a>
-                  <a href="#" class="text-white p-2"><span class="icon-twitter"></span></a>
-                  <a href="#" class="text-white p-2"><span class="icon-linkedin"></span></a>
-                </p>
-              </div>
-
-            </div>
-          </div>
-
-          <div class="col-md-6 col-lg-4 mb-5 mb-lg-5">
-            <div class="team-member">
-
-              <img src="{{ asset('assets/images/person_5.jpg') }}" alt="Image" class="img-fluid">
-
-              <div class="text">
-
-                <h2 class="mb-2 font-weight-light h4">Nathan Dumlao</h2>
-                <span class="d-block mb-2 text-white-opacity-05">Creative Director</span>
-                <p class="mb-4">Lorem ipsum dolor sit amet consectetur adipisicing elit ullam reprehenderit nemo.</p>
-                <p>
-                  <a href="#" class="text-white p-2"><span class="icon-facebook"></span></a>
-                  <a href="#" class="text-white p-2"><span class="icon-twitter"></span></a>
-                  <a href="#" class="text-white p-2"><span class="icon-linkedin"></span></a>
-                </p>
-              </div>
-
-            </div>
-          </div>
-
-          <div class="col-md-6 col-lg-4 mb-5 mb-lg-5">
-            <div class="team-member">
-
-              <img src="{{ asset('assets/images/person_6.jpg') }}" alt="Image" class="img-fluid">
-
-              <div class="text">
-
-                <h2 class="mb-2 font-weight-light h4">Brooke Cagle</h2>
-                <span class="d-block mb-2 text-white-opacity-05">Creative Director</span>
-                <p class="mb-4">Lorem ipsum dolor sit amet consectetur adipisicing elit ullam reprehenderit nemo.</p>
-                <p>
-                  <a href="#" class="text-white p-2"><span class="icon-facebook"></span></a>
-                  <a href="#" class="text-white p-2"><span class="icon-twitter"></span></a>
-                  <a href="#" class="text-white p-2"><span class="icon-linkedin"></span></a>
-                </p>
-              </div>
-
-            </div>
-          </div>
-
-
-        </div>
-      </div>
-    </div> -->
-
-   
-
-
     <footer class="site-footer">
       <div class="container">
         <div class="row">
