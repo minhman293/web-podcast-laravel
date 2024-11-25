@@ -2,3 +2,24 @@
     height: 30px;
     padding: 5px 10px;
   }
+.pagination {
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #17a2b8;
+    border-color: #0d92a7;
+}
+
+.pagination .page-link {
+    color: #333;
+    padding: 12px 18px;
+    margin: 0 5px;
+    border-radius: 50%;
+}
+
+.pagination .page-item:first-child .page-link,
+.pagination .page-item:last-child .page-link {
+    border-radius: 50%;
+}
