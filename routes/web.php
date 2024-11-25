@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\AuthController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -12,25 +13,28 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::middleware(['web'])->group(function(){
+    Route::get('/', function () {
+        return view('index');
+    })->name('index');
 
-Route::get('/', function () {
-    return view('index');
-});
+    Route::get('/about', function () {
+        return view('about');
+    })->name('about');
 
-Route::get('/about', function () {
-    return view('about');
-});
+    Route::get('/contact', function () {
+        return view('contact');
+    })->name('contact');
 
-Route::get('/contact', function () {
-    return view('contact');
-});
-
-Route::group(['prefix' => 'auth' ], function() {
-    Route::get('/login', function () {
-        return view('auth.login-register');
+    Route::group(['prefix' => 'auth'], function () {
+        Route::get('/login', [AuthController::class, 'getLogin'])->name('get_login');
+        Route::get('/register', [AuthController::class, 'getRegister'])->name('get_register');
+        Route::post('/login', [AuthController::class, 'login'])->name('login');
+        Route::post('/register', [AuthController::class, 'register'])->name('register');
+        Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     });
-});
 
-Route::get('/podcast/{id}', function () {
-    return view('podcast.single-podcast');
+    Route::get('/podcast/{id}', function () {
+        return view('podcast.single-podcast');
+    });
 });

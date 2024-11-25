@@ -3,9 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Hash;
 
-class Podcaster extends Model
+class Podcaster extends Authenticatable
 {
     use HasFactory;
 
@@ -17,4 +19,9 @@ class Podcaster extends Model
         'google_id',
         'facebook_id'
     ];
+
+    public function setPasswordAttribute($value)
+    {
+        $this->attributes['password'] = Hash::make($value);
+    }
 }
