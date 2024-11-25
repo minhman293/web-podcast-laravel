@@ -91,14 +91,26 @@
         <div class="row">
 
           <div class="col-lg-9-crud">
-
             <!-- Search Form -->
             <div class="d-flex justify-content-between mb-3">
-              <form action="" method="GET" class="flex-grow-1 mr-4 mt-2" data-aos="fade-up">
-                <input class="form-control w-100" type="search" name="search" placeholder="Search Podcasts" aria-label="Search" value="{{ request('search') }}">
+              <form action="{{ route('podcast.crud') }}" method="GET" class="flex-grow-1 mr-4" data-aos="fade-up" id="searchForm">
+                <div class="input-group">
+                  <input class="form-control" type="search" name="search" placeholder="Search by title, description, author or category" 
+                        value="{{ request('search') }}" aria-label="Search">
+                      <button class="btn btn-primary search-button" data-aos="fade-up" type="submit" style="Color: white">Search</button>
+                      @if(request('search'))
+                          <a href="{{ route('podcast.crud') }}" data-aos="fade-up" class="btn btn-secondary"> Clear </a>
+                      @endif
+                </div>
               </form>
               <a href="crud/add" class="btn btn-success" data-aos="fade-up">Add New Podcast</a>
             </div>
+            @if($podcasts->isEmpty())
+              <div class="alert alert-info" role="alert">
+                  No podcasts found{{ request('search') ? ' for "'.request('search').'"' : '' }}
+              </div>
+            @endif
+
             @if(session('success'))
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                     {{ session('success') }}
@@ -160,11 +172,12 @@
                       </div>
                     </div>
                     
-                  </div>
-                </div>
-              </div>
-    <div class="site-section bg-light block-13">
-      <div class="container">
+          </div>
+
+    
+          <div class="site-section bg-light block-13">
+      
+            <div class="container">
         <div class="row mb-5">
           <div class="col-md-12 text-center">
             <h2 class="font-weight-bold text-black">Featured Guests</h2>

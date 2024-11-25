@@ -23,3 +23,14 @@
 .pagination .page-item:last-child .page-link {
     border-radius: 50%;
 }
+.col-lg-9-crud {
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 75%;
+    flex: 0 0 100%;
+    max-width: 100%; }
+.search-button {
+        margin: 0 5px 0 10px;
+      }
+input.form-control {
+        margin-top: 8px;
+    }

@@ -140,6 +140,26 @@
                       <input type="file" class="form-control-file" id="audio" name="audio" accept="audio/mp3,audio/wav,audio/ogg" required>
                       <small class="form-text text-muted">Maximum file size: 50MB</small>
                   </div>
+                  <script>
+                    document.getElementById('audio').addEventListener('change', function(e) {
+                        const file = e.target.files[0];
+                        const audio = document.createElement('audio');
+                        const reader = new FileReader();
+
+                        reader.onload = function(e) {
+                            audio.src = e.target.result;
+                            
+                            // When audio metadata is loaded, get duration
+                            audio.addEventListener('loadedmetadata', function() {
+                                // Round duration to whole number
+                                const duration = Math.round(audio.duration);
+                                document.getElementById('duration').value = duration;
+                            });
+                        };
+
+                        reader.readAsDataURL(file);
+                    });
+                  </script>
 
                   <div class="form-group">
                       <label for="image">Podcast Image</label>

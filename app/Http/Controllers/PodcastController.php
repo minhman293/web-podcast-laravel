@@ -10,10 +10,38 @@ use App\Routes;
 
 class PodcastController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $podcasts = Podcast::orderBy('created_at', 'desc')->paginate(5);
-        return view('crud', compact('podcasts'));
+        try {
+            $search = $request->input('search');
+            
+            $query = Podcast::query();
+    
+            // If search term exists
+            if ($search) {
+                $query->where(function($q) use ($search) {
+                    $q->where('title', 'LIKE', '%'.$search.'%')
+                      ->orWhere('description', 'LIKE', '%'.$search.'%');
+                });
+            }
+    
+            // Get paginated results
+            $podcasts = $query->orderBy('created_at', 'desc')
+                             ->paginate(5)
+                             ->withQueryString(); // Preserves query parameters in pagination links
+    
+            // If AJAX request, return partial view
+            if ($request->ajax()) {
+                return view('partials.podcast-list', compact('podcasts'))->render();
+            }
+    
+            // Return full view with results
+            return view('crud', compact('podcasts'));
+    
+        } catch (\Exception $e) {
+            \Log::error('Search error: ' . $e->getMessage());
+            return back()->with('error', 'An error occurred while searching podcasts');
+        }
     }
 
     public function show($id)

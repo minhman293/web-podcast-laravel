@@ -1076,11 +1076,6 @@ pre {
     -ms-flex: 0 0 75%;
     flex: 0 0 75%;
     max-width: 75%; }
-  .col-lg-9-crud {
-    -webkit-box-flex: 0;
-    -ms-flex: 0 0 75%;
-    flex: 0 0 100%;
-    max-width: 100%; }
   .col-lg-10 {
     -webkit-box-flex: 0;
     -ms-flex: 0 0 83.33333%;
