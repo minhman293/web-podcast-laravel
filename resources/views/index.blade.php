@@ -9,6 +9,32 @@
 
 </head>
 <body>
+  <div id="notification" class="notification hidden">
+    <span id="notification-message"></span>
+  </div>
+
+  <!-- Notifications Register/Login/Logout Status -->
+  @if(session('success'))
+    <div class="alert alert-success">
+      {{ session('success') }}
+    </div>
+  @endif
+
+  @if(session('error'))
+    <div class="alert alert-danger">
+      {{ session('error') }}
+    </div>
+  @endif
+
+  @if($errors->any())
+    <div class="alert alert-danger">
+      <ul>
+        @foreach ($errors->all() as $error)
+          <li>{{ $error }}</li>
+        @endforeach
+      </ul>
+    </div>
+  @endif
 
   <div class="site-wrap">
 
@@ -29,7 +55,7 @@
 
 
           <div class="col-3">
-            <h1 class="site-logo"><a href="index.html" class="h2">Podcast<span class="text-primary">.</span> </a></h1>
+            <h1 class="site-logo"><a href="{{ url('/') }}" class="h2">Podcast<span class="text-primary">.</span> </a></h1>
           </div>
           <div class="col-9">
             <nav class="site-navigation position-relative text-right text-md-right" role="navigation">
@@ -40,7 +66,7 @@
 
               <ul class="site-menu js-clone-nav d-none d-lg-block">
                 <li class="active">
-                  <a href="index.html">Home</a>
+                  <a href="{{ url('/') }}">Home</a>
                 </li>
                 <li class="has-children">
                   <a href="#">Dropdown</a>
@@ -50,9 +76,20 @@
                     <li><a href="#">Menu Three</a></li>
                   </ul>
                 </li>
-                <li><a href="about.html">About</a></li>
-                <li><a href="contact.html">Contact</a></li>
-                <li><a href="login-register.html">Login / Register</a></li>
+                <li><a href="{{ url('/about') }}">About</a></li>
+                <li><a href="{{ url('/contact') }}">Contact</a></li>
+                @if(session('name'))
+                  <li class="active">
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                      @csrf
+                    </form> 
+                    <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                      Hi, {{ session('name') }}
+                    </a>
+                  </li>
+                @else
+                  <li class="active"><a href="{{ url('/login-register') }}">Login / Register</a></li>
+                @endif
               </ul>
             </nav>
 
@@ -85,162 +122,54 @@
 
         <div class="row">
           <div class="col-lg-3">
-            <div class="featured-user  mb-5 mb-lg-0">
+          
+            <div class="featured-user mb-5 mb-lg-0">
               <h3 class="mb-4">Popular Podcaster</h3>
               <ul class="list-unstyled">
-                <li>
-                  <a href="#" class="d-flex align-items-center">
+                @foreach($podcasters as $podcaster)
+                  <li>
+                    <a href="#" class="d-flex align-items-center">
                     <img src="{{ asset('assets/images/person_1.jpg') }}" alt="Image" class="img-fluid mr-2">
-                    <div class="podcaster">
-                      <span class="d-block">Claire Stanford</span>
-                      <span class="small">32,420 podcasts</span>
-                    </div>
-                  </a>
-                </li>
-                <li>
-                  <a href="#" class="d-flex align-items-center">
-                    <img src="{{ asset('assets/images/person_2.jpg') }}" alt="Image" class="img-fluid mr-2">
-                    <div class="podcaster">
-                      <span class="d-block">Dianne Winston</span>
-                      <span class="small">12,381 podcasts</span>
-                    </div>
-                  </a>
-                </li>
-                <li>
-                  <a href="#" class="d-flex align-items-center">
-                    <img src="{{ asset('assets/images/person_3.jpg') }}" alt="Image" class="img-fluid mr-2">
-                    <div class="podcaster">
-                      <span class="d-block">Borris Larry</span>
-                      <span class="small">9,291 podcasts</span>
-                    </div>
-                  </a>
-                </li>
-                <li>
-                  <a href="#" class="d-flex align-items-center">
-                    <img src="{{ asset('assets/images/person_4.jpg') }}" alt="Image" class="img-fluid mr-2">
-                    <div class="podcaster">
-                      <span class="d-block">Garry Smith</span>
-                      <span class="small">3,291 podcasts</span>
-                    </div>
-                  </a>
-                </li>
-                <li>
-                  <a href="#" class="d-flex align-items-center">
-                    <img src="{{ asset('assets/images/person_5.jpg') }}" alt="Image" class="img-fluid mr-2">
-                    <div class="podcaster">
-                      <span class="d-block">Gerson Stack</span>
-                      <span class="small">1,092 podcasts</span>
-                    </div>
-                  </a>
-                </li>
-                <li>
-                  <a href="#" class="d-flex align-items-center">
-                    <img src="{{ asset('assets/images/person_6.jpg') }}" alt="Image" class="img-fluid mr-2">
-                    <div class="podcaster">
-                      <span class="d-block">Jenna Stone</span>
-                      <span class="small">911 podcasts</span>
-                    </div>
-                  </a>
-                </li>
+                      <div class="podcaster">
+                        <span class="d-block">{{ $podcaster->name }}</span>
+                        <span class="small">{{ number_format($podcaster->podcasts_count) }} podcasts</span>
+                      </div>
+                    </a>
+                  </li>
+                @endforeach
               </ul>
             </div>
+
           </div>
 
           <div class="col-lg-9">
 
-
-            <div class="d-block d-md-flex podcast-entry bg-white mb-5" data-aos="fade-up">
-              <div class="image" style="background-image: url('{{ asset('assets/images/img_1.jpg') }}');"></div>
-              <div class="text">
-
-                <h3 class="font-weight-light"><a href="single-post.html">Episode 08: How To Create Web Page Using Bootstrap 4</a></h3>
-                <div class="text-white mb-3"><span class="text-black-opacity-05"><small>By Mike Smith <span class="sep">/</span> 16 September 2017 <span class="sep">/</span> 1:30:20</small></span></div>
-
-
-                <div class="player">
-                  <audio id="player2" preload="none" controls style="max-width: 100%">
-                    <source src="http://www.largesound.com/ashborytour/sound/AshboryBYU.mp3" type="audio/mp3">
-                    </audio>
-                  </div>
-
-                </div>
-              </div>
-
-
+            <h3 class="mb-4">Featured Podcasts</h3>
+            @foreach($podcasts as $podcast)
               <div class="d-block d-md-flex podcast-entry bg-white mb-5" data-aos="fade-up">
-                <div class="image" style="background-image: url('{{ asset('assets/images/img_2.jpg') }}');"></div>
-                <div class="text">
-
-                  <h3 class="font-weight-light"><a href="single-post.html">Episode 07: How To Create Web Page Using Bootstrap 4</a></h3>
-                  <div class="text-white mb-3"><span class="text-black-opacity-05"><small>By Mike Smith <span class="sep">/</span> 16 September 2017 <span class="sep">/</span> 1:30:20</small></span></div>
-
-                  <div class="player">
-                    <audio id="player2" preload="none" controls style="max-width: 100%">
-                      <source src="http://www.largesound.com/ashborytour/sound/AshboryBYU.mp3" type="audio/mp3">
-                      </audio>
-                    </div>
-
-                  </div>
-                </div>
-
-
-                <div class="d-block d-md-flex podcast-entry bg-white mb-5" data-aos="fade-up">
-                  <div class="image" style="background-image: url('{{ asset('assets/images/img_3.jpg') }}');"></div>
+                  <div class="image" style="background-image: url('{{ asset($podcast->image) }}');"></div>
                   <div class="text">
-
-                    <h3 class="font-weight-light"><a href="single-post.html">Episode 06: How To Create Web Page Using Bootstrap 4</a></h3>
-                    <div class="text-white mb-3"><span class="text-black-opacity-05"><small>By Mike Smith <span class="sep">/</span> 16 September 2017 <span class="sep">/</span> 1:30:20</small></span></div>
-
-
-                    <div class="player">
-                      <audio id="player2" preload="none" controls style="max-width: 100%">
-                        <source src="http://www.largesound.com/ashborytour/sound/AshboryBYU.mp3" type="audio/mp3">
-                        </audio>
+                  <h3 class="font-weight-light"><a href="{{ route('podcast.podcast_detail', ['category' => $podcast->category->name, 'id' => $podcast->id]) }}">{{ $podcast->title }}</a></h3>
+                      <div class="text-white mb-3">
+                          <span class="text-black-opacity-05">
+                              <small>By {{ $podcast->podcaster->name }} <span class="sep">/</span> {{ $podcast->created_at->format('d M Y') }} <span class="sep">/</span> {{ gmdate('H:i:s', $podcast->duration) }}</small>
+                          </span>
                       </div>
-                    </div>
-                  </div>
-
-
-                  <div class="d-block d-md-flex podcast-entry bg-white mb-5" data-aos="fade-up">
-                    <div class="image" style="background-image: url('{{ asset('assets/images/img_4.jpg') }}');"></div>
-                    <div class="text">
-
-                      <h3 class="font-weight-light"><a href="single-post.html">Episode 05: How To Create Web Page Using Bootstrap 4</a></h3>
-                      <div class="text-white mb-3"><span class="text-black-opacity-05"><small>By Mike Smith <span class="sep">/</span> 16 September 2017 <span class="sep">/</span> 1:30:20</small></span></div>
-
-
                       <div class="player">
-                        <audio id="player2" preload="none" controls style="max-width: 100%">
-                          <source src="http://www.largesound.com/ashborytour/sound/AshboryBYU.mp3" type="audio/mp3">
-                          </audio>
-                        </div>
-                      </div>
-                    </div>
-
-
-                    <div class="d-block d-md-flex podcast-entry bg-white mb-5" data-aos="fade-up">
-                      <div class="image" style="background-image: url('{{ asset('assets/images/img_5.jpg') }}');"></div>
-                      <div class="text">
-
-                        <h3 class="font-weight-light"><a href="single-post.html">Episode 04: How To Create Web Page Using Bootstrap 4</a></h3>
-                        <div class="text-white mb-3"><span class="text-black-opacity-05"><small>By Mike Smith <span class="sep">/</span> 16 September 2017 <span class="sep">/</span> 1:30:20</small></span></div>
-
-
-                        <div class="player">
                           <audio id="player2" preload="none" controls style="max-width: 100%">
-                            <source src="http://www.largesound.com/ashborytour/sound/AshboryBYU.mp3" type="audio/mp3">
-                            </audio>
-                          </div>
-                        </div>
+                              <source src="{{ asset($podcast->audio) }}" type="audio/mp3">
+                          </audio>
                       </div>
+                  </div>
+              </div>
+          @endforeach
 
-
-                    </div>
-                    <div class="container" data-aos="fade-up">
-                      <div class="row">
-                        <div class="col-md-12 text-center">
-                          <div class="site-block-27">
-                            <ul>
+          <!-- Pagination (nếu cần) -->
+          <div class="container" data-aos="fade-up">
+              <div class="row">
+                  <div class="col-md-12 text-center">
+                      <div class="site-block-27">
+                          <ul>
                               <li><a href="#" class="icon-keyboard_arrow_left"></a></li>
                               <li class="active"><span>1</span></li>
                               <li><a href="#">2</a></li>
@@ -248,14 +177,14 @@
                               <li><a href="#">4</a></li>
                               <li><a href="#">5</a></li>
                               <li><a href="#" class="icon-keyboard_arrow_right"></a></li>
-                            </ul>
-                          </div>
-                        </div>
+                          </ul>
                       </div>
-                    </div>
                   </div>
-                </div>
               </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- <div class="site-section">
       <div class="container" data-aos="fade-up">
@@ -398,67 +327,17 @@
           </div>
         </div>
         <div class="nonloop-block-13 owl-carousel">
-
-          <div class="text-center p-3 p-md-5 bg-white">
-            <div class="mb-4">            
-              <img src="{{ asset('assets/images/person_1.jpg') }}") alt="Image" class="w-50 mx-auto img-fluid rounded-circle">
+          @foreach($podcasters as $podcaster)
+            <div class="text-center p-3 p-md-5 bg-white">            
+              <div class="mb-4">            
+                <img src="{{ asset('assets/images/person_1.jpg') }}" alt="Image" class="w-50 mx-auto img-fluid rounded-circle">
+              </div>
+              <div class="">
+                <h3 class="font-weight-light h5">{{ $podcaster->name }}</h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Et, iusto. Aliquam illo, cum sed ea? Ducimus quos, ea?</p>
+              </div>
             </div>
-            <div class="">
-              <h3 class="font-weight-light h5">Megan Smith</h3>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Et, iusto. Aliquam illo, cum sed ea? Ducimus quos, ea?</p>
-            </div>
-          </div>
-
-          <div class="text-center p-3 p-md-5 bg-white">
-            <div class="mb-4">            
-              <img src="{{ asset('assets/images/person_2.jpg') }}" alt="Image" class="w-50 mx-auto img-fluid rounded-circle">
-            </div>
-            <div class="">
-              <h3 class="font-weight-light h5">Brooke Cagle</h3>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Et, iusto. Aliquam illo, cum sed ea? Ducimus quos, ea?</p>
-            </div>
-          </div>
-
-          <div class="text-center p-3 p-md-5 bg-white">
-            <div class="mb-4">            
-              <img src="{{ asset('assets/images/person_3.jpg') }}" alt="Image" class="w-50 mx-auto img-fluid rounded-circle">
-            </div>
-            <div class="">
-              <h3 class="font-weight-light h5">Philip Martin</h3>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Et, iusto. Aliquam illo, cum sed ea? Ducimus quos, ea?</p>
-            </div>
-          </div>
-
-          <div class="text-center p-3 p-md-5 bg-white">
-            <div class="mb-4">            
-              <img src="{{ asset('assets/images/person_4.jpg') }}" alt="Image" class="w-50 mx-auto img-fluid rounded-circle">
-            </div>
-            <div class="">
-              <h3 class="font-weight-light h5">Steven Ericson</h3>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Et, iusto. Aliquam illo, cum sed ea? Ducimus quos, ea?</p>
-            </div>
-          </div>
-
-          <div class="text-center p-3 p-md-5 bg-white">
-            <div class="mb-4">            
-              <img src="{{ asset('assets/images/person_5.jpg') }}" alt="Image" class="w-50 mx-auto img-fluid rounded-circle">
-            </div>
-            <div class="">
-              <h3 class="font-weight-light h5">Nathan Dumlao</h3>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Et, iusto. Aliquam illo, cum sed ea? Ducimus quos, ea?</p>
-            </div>
-          </div>
-
-          <div class="text-center p-3 p-md-5 bg-white">
-            <div class="mb-4">            
-              <img src="{{ asset('assets/images/person_6.jpg') }}" alt="Image" class="w-50 mx-auto img-fluid rounded-circle">
-            </div>
-            <div class="">
-              <h3 class="font-weight-light h5">Brook Smith</h3>
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Et, iusto. Aliquam illo, cum sed ea? Ducimus quos, ea?</p>
-            </div>
-          </div>
-
+          @endforeach 
         </div>
       </div>
     </div>
@@ -526,6 +405,21 @@
   </div>
 
   @include('partials.scripts')
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const notification = document.querySelector('.alert');
+      if (notification) {
+          setTimeout(() => {
+              notification.style.display = 'none';
+          }, 10000); // 10 giây
+
+          notification.addEventListener('click', () => {
+              notification.style.display = 'none';
+          });
+      }
+    });
+  </script>
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {

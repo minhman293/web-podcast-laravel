@@ -10,6 +10,10 @@
   </head>
   <body>
   
+  <div id="notification" class="notification hidden">
+    <span id="notification-message"></span>
+  </div>
+
   <div class="site-wrap">
 
     <div class="site-mobile-menu">
@@ -29,7 +33,7 @@
           
 
           <div class="col-3">
-            <h1 class="site-logo"><a href="index.html" class="h2">Podcast<span class="text-primary">.</span> </a></h1>
+            <h1 class="site-logo"><a href="{{ url('/') }}" class="h2">Podcast<span class="text-primary">.</span> </a></h1>
           </div>
           <div class="col-9">
             <nav class="site-navigation position-relative text-right text-md-right" role="navigation">
@@ -40,7 +44,7 @@
 
                 <ul class="site-menu js-clone-nav d-none d-lg-block">
                   <li>
-                    <a href="index.html">Home</a>
+                    <a href="{{ url('/') }}">Home</a>
                   </li>
                   <li class="has-children">
                     <a href="#">Dropdown</a>
@@ -50,9 +54,22 @@
                       <li><a href="#">Menu Three</a></li>
                     </ul>
                   </li>
-                  <li><a href="about.html">About</a></li>
-                  <li><a href="contact.html">Contact</a></li>
-                  <li class="active"><a href="login-register.html">Login / Register</a></li>
+                  <li><a href="{{ url('/about') }}">About</a></li>
+                  <li><a href="{{ url('/contact') }}">Contact</a></li>
+
+                  @if(session('name'))
+                    <li class="active">
+                      <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                        @csrf
+                      </form>
+                      <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                        Hi, {{ session('name') }}
+                      </a>
+                    </li>
+                  @else
+                      <li class="active"><a href="{{ url('/login-register') }}">Login / Register</a></li>
+                  @endif
+                  
                 </ul>
             </nav>
 
@@ -83,31 +100,31 @@
         <div class="row justify-content-center">
           <div class="col-md-5 mb-5">
             <h3 class="mb-5">Register</h3>
-            <form action="#" method="post" class="bg-white">
-              
+            <form action="{{ route('register') }}" method="POST" class="bg-white">
+              @csrf
               <div class="">
                 <div class="form-group row">
                   <div class="col-md-12">
                     <label for="c_fname" class="text-black">Username <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" id="c_fname" name="c_fname">
+                    <input type="text" class="form-control" id="name" name="name">
                   </div>
                 </div>
                 <div class="form-group row">
                   <div class="col-md-12">
                     <label for="c_email" class="text-black">Email <span class="text-danger">*</span></label>
-                    <input type="email" class="form-control" id="c_email" name="c_email" placeholder="">
+                    <input type="email" class="form-control" id="email" name="email" placeholder="">
                   </div>
                 </div>
                 <div class="form-group row">
                   <div class="col-md-12">
                     <label for="c_pass" class="text-black">Password <span class="text-danger">*</span></label>
-                    <input type="password" class="form-control" id="c_pass" name="c_pass">
+                    <input type="password" class="form-control" id="password" name="password">
                   </div>
                 </div>
                 <div class="form-group row">
                   <div class="col-md-12">
                     <label for="c_repass" class="text-black">Re-type Password <span class="text-danger">*</span></label>
-                    <input type="password" class="form-control" id="c_repass" name="c_repass">
+                    <input type="password" class="form-control" id="confirm_password" name="confirm_password">
                   </div>
                 </div>
                 
@@ -119,32 +136,109 @@
                 </div>
               </div>
             </form>
+
+            <!-- Thông báo đăng ký -->
+            @if(session('success'))
+              <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                  showNotification("{{ session('success') }}", 'success');
+                });
+              </script>
+            @endif
+
+            @if(session('error'))
+              <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                  showNotification("{{ session('error') }}", 'error');
+                });
+              </script>
+            @endif
+
+            @if($errors->any())
+              <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                  let errorMessages = '';
+                  @foreach ($errors->all() as $error)
+                    errorMessages += '{{ $error }}\n';
+                  @endforeach
+                  showNotification(errorMessages, 'error');
+                });
+              </script>
+            @endif
+
           </div>
           <div class="col-md-5 mb-5">
             <h3 class="mb-5">Login</h3>
-            <form action="#" method="post" class="bg-white">
-              
+
+            @if (session('success'))
+              <div class="alert alert-success">
+                  {{ session('success') }}
+              </div>
+            @endif
+
+            @if ($errors->any())
+              <div class="alert alert-danger">
+                <ul>
+                  @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                  @endforeach
+                </ul>
+              </div>
+            @endif
+
+            <form action="{{ route('login') }}" method="POST" class="bg-white">
+              @csrf
               <div class="">
                 <div class="form-group row">
                   <div class="col-md-12">
-                    <label for="c_uname" class="text-black">Username <span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" id="c_uname" name="c_uname">
+                    <label for="c_uname" class="text-black">Email <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="email" name="email">
                   </div>
                 </div>
                 <div class="form-group row">
                   <div class="col-md-12">
                     <label for="c_password" class="text-black">Password <span class="text-danger">*</span></label>
-                    <input type="password" class="form-control" id="c_password" name="c_password">
+                    <input type="password" class="form-control" id="password" name="password">
                   </div>
                 </div>
                 
                 <div class="form-group row">
                   <div class="col-lg-12">
-                    <input type="submit" class="btn btn-primary btn-lg" value="Login">
+                    <input type="submit" class="btn btn-primary btn-lg" value="Login" id="loginButton">
                   </div>
                 </div>
               </div>
             </form>
+
+            <!-- Thông báo đăng nhập -->
+            @if(session('success'))
+              <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                  showNotification("{{ session('success') }}", 'success');
+                });
+              </script>
+            @endif
+
+            @if(session('error'))
+              <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                  showNotification("{{ session('error') }}", 'error');
+                });
+              </script>
+            @endif
+
+            @if($errors->any())
+              <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                  let errorMessages = '';
+                  @foreach ($errors->all() as $error)
+                    errorMessages += '{{ $error }}\n';
+                  @endforeach
+                  showNotification(errorMessages, 'error');
+                });
+              </script>
+            @endif
+
           </div>
         </div>
       </div>
@@ -214,6 +308,21 @@
   </div>
 
   @include('partials.scripts')
+
+  <script>
+    function showNotification(message, type = 'success') {
+      const notification = document.getElementById('notification');
+      const notificationMessage = document.getElementById('notification-message');
+
+      notificationMessage.textContent = message;
+      notification.classList.remove('hidden');
+      notification.classList.add(type === 'success' ? 'alert-success' : 'alert-danger');
+
+      setTimeout(() => {
+        notification.classList.add('hidden');
+      }, 10000); // 10 giây
+    }
+  </script>
 
   <script>
       document.addEventListener('DOMContentLoaded', function() {

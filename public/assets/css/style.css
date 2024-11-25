@@ -51,6 +51,213 @@ a {
     opacity: 1;
     visibility: visible; }
 
+/* Comment CSS */
+
+/* Comment Section */
+.comment-section {
+  max-width: 100%;
+  margin: 0 auto;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Title */
+.comment-section h2 {
+  padding: 15px;
+  font-size: 20px;
+  background-color: #007bff;
+  color: #fff;
+  text-align: center;
+}
+
+/* Comments List */
+.comments {
+  padding: 15px;
+}
+
+.comment {
+  margin-bottom: 15px;
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.comment:last-child {
+  border-bottom: none;
+}
+
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+  font-size: 14px;
+  color: #555;
+}
+
+.comment-author {
+  font-weight: bold;
+}
+
+.comment-time {
+  font-style: italic;
+}
+
+.comment-content {
+  font-size: 16px;
+  line-height: 1.4;
+}
+
+/* Comment Input */
+.comment-input {
+  display: flex;
+  flex-direction: column;
+  padding: 15px;
+  border-top: 1px solid #ddd;
+  background-color: #f5f5f5;
+}
+
+.comment-input textarea {
+  width: 100%;
+  resize: none;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.comment-input button {
+  align-self: flex-end;
+  padding: 10px 20px;
+  font-size: 16px;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.comment-input button:hover {
+  background-color: #0056b3;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .comment-section {
+      margin: 0 10px;
+  }
+
+  .comment-input textarea {
+      font-size: 14px;
+  }
+
+  .comment-input button {
+      font-size: 14px;
+      padding: 8px 16px;
+  }
+}
+
+/* Comment Actions */
+.comment-actions {
+  margin-top: 5px;
+  display: flex;
+  gap: 10px;
+}
+
+.comment-actions button {
+  padding: 5px 10px;
+  font-size: 14px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.comment-actions .edit-btn {
+  background-color: #ffc107;
+  color: #fff;
+}
+
+.comment-actions .delete-btn {
+  background-color: #dc3545;
+  color: #fff;
+}
+
+.comment-actions button:hover {
+  opacity: 0.8;
+}
+
+/* Đảm bảo textarea có cùng độ rộng như comment */
+.edit-textarea {
+  width: 100%; /* Đảm bảo chiều rộng chiếm toàn bộ khung comment */
+  padding: 8px; /* Tương tự như padding của khung bình luận */
+  font-size: 16px; /* Kích thước font tương đương */
+  border: 1px solid #ddd; /* Viền giống với các phần tử khác */
+  border-radius: 4px; /* Bo góc tương tự */
+  resize: none; /* Tắt resize để không làm hỏng bố cục */
+  box-sizing: border-box; /* Bao gồm padding vào tính toán độ rộng */
+}
+
+
+
+
+/* From Uiverse.io by sekaiking */ 
+.btn-category {
+  background-color: white;
+  color: black;
+  border-radius: 10em;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 1em 2em;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  border: 1px solid black;
+  box-shadow: 0 0 0 0 black;
+}
+
+.btn-category:hover {
+  transform: translateY(-4px) translateX(-2px);
+  box-shadow: 2px 5px 0 0 black;
+};
+
+.btn-category:active {
+  transform: translateY(2px) translateX(1px);
+  box-shadow: 0 0 0 0 black;
+}
+    
+
+/* Notifications Login/Register */
+.notification {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #4caf50; /* Màu nền cho thông báo thành công */
+  color: white;
+  padding: 15px;
+  border-radius: 5px;
+  z-index: 1000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 80%;
+  max-width: 600px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.notification.hidden {
+  display: none;
+}
+
+.notification .notification-close {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
 .btn {
   text-transform: uppercase;
   position: relative;

@@ -27,7 +27,7 @@
           
 
           <div class="col-3">
-            <h1 class="site-logo"><a href="index.html" class="h2">Podcast<span class="text-primary">.</span> </a></h1>
+            <h1 class="site-logo"><a href="{{ url('/') }}" class="h2">Podcast<span class="text-primary">.</span> </a></h1>
           </div>
           <div class="col-9">
             <nav class="site-navigation position-relative text-right text-md-right" role="navigation">
@@ -37,8 +37,8 @@
                 <div class="d-block d-lg-none ml-md-0 mr-auto"><a href="#" class="site-menu-toggle js-menu-toggle text-black"><span class="icon-menu h3"></span></a></div>
 
                 <ul class="site-menu js-clone-nav d-none d-lg-block">
-                  <li>
-                    <a href="index.html">Home</a>
+                  <li class="active">
+                    <a href="{{ url('/') }}">Home</a>
                   </li>
                   <li class="has-children">
                     <a href="#">Dropdown</a>
@@ -48,9 +48,20 @@
                       <li><a href="#">Menu Three</a></li>
                     </ul>
                   </li>
-                  <li><a href="about.html">About</a></li>
-                  <li class="active"><a href="contact.html">Contact</a></li>
-                  <li><a href="login-register.html">Login / Register</a></li>
+                  <li><a href="{{ url('/about') }}">About</a></li>
+                  <li><a href="{{ url('/contact') }}">Contact</a></li>
+                  @if(session('name'))
+                    <li class="active">
+                      <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                        @csrf
+                      </form> 
+                      <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                        Hi, {{ session('name') }}
+                      </a>
+                    </li>
+                  @else
+                    <li class="active"><a href="{{ url('/login-register') }}">Login / Register</a></li>
+                  @endif
                 </ul>
             </nav>
 

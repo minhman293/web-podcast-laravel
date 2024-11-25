@@ -29,7 +29,7 @@
           
 
           <div class="col-3">
-            <h1 class="site-logo"><a href="index.html" class="h2">Podcast<span class="text-primary">.</span> </a></h1>
+            <h1 class="site-logo"><a href="{{ url('/') }}" class="h2">Podcast<span class="text-primary">.</span> </a></h1>
           </div>
           <div class="col-9">
             <nav class="site-navigation position-relative text-right text-md-right" role="navigation">
@@ -39,8 +39,8 @@
                 <div class="d-block d-lg-none ml-md-0 mr-auto"><a href="#" class="site-menu-toggle js-menu-toggle text-black"><span class="icon-menu h3"></span></a></div>
 
                 <ul class="site-menu js-clone-nav d-none d-lg-block">
-                  <li>
-                    <a href="index.html">Home</a>
+                  <li class="active">
+                    <a href="{{ url('/') }}">Home</a>
                   </li>
                   <li class="has-children">
                     <a href="#">Dropdown</a>
@@ -50,9 +50,20 @@
                       <li><a href="#">Menu Three</a></li>
                     </ul>
                   </li>
-                  <li class="active"><a href="about.html">About</a></li>
-                  <li><a href="contact.html">Contact</a></li>
-                  <li><a href="login-register.html">Login / Register</a></li>
+                  <li><a href="{{ url('/about') }}">About</a></li>
+                  <li><a href="{{ url('/contact') }}">Contact</a></li>
+                  @if(session('name'))
+                    <li class="active">
+                      <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                        @csrf
+                      </form> 
+                      <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                        Hi, {{ session('name') }}
+                      </a>
+                    </li>
+                  @else
+                    <li class="active"><a href="{{ url('/login-register') }}">Login / Register</a></li>
+                  @endif
                 </ul>
             </nav>
 
@@ -104,36 +115,18 @@
           <div class="col-md-12 text-center mb-5">
             <h2 class="display-5 mb-5 text-black">The Podcaster</h2>
           </div>
-          <div class="col-md-6 col-lg-4 text-center mb-5">
-            <img src="{{ asset('assets/images/person_1.jpg') }}" alt="Image" class="img-fluid w-50 rounded-circle mb-3">
-            <h2 class="text-black font-weight-light mb-4">Jean Smith</h2>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Pariatur ab quas facilis obcaecati non ea, est odit repellat distinctio incidunt, quia aliquam eveniet quod deleniti impedit sapiente atque tenetur porro?</p>
-            <p>
-              <a href="#" class="pl-0 pr-3"><span class="icon-twitter"></span></a>
-              <a href="#" class="pl-3 pr-3"><span class="icon-instagram"></span></a>
-              <a href="#" class="pl-3 pr-3"><span class="icon-facebook"></span></a>
-            </p>
-          </div>
-          <div class="col-md-6 col-lg-4 text-center mb-5">
-            <img src="{{ asset('assets/images/person_2.jpg') }}" alt="Image" class="img-fluid w-50 rounded-circle mb-3">
-            <h2 class="text-black font-weight-light mb-4">Claire Smith</h2>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Pariatur ab quas facilis obcaecati non ea, est odit repellat distinctio incidunt, quia aliquam eveniet quod deleniti impedit sapiente atque tenetur porro?</p>
-            <p>
-              <a href="#" class="pl-0 pr-3"><span class="icon-twitter"></span></a>
-              <a href="#" class="pl-3 pr-3"><span class="icon-instagram"></span></a>
-              <a href="#" class="pl-3 pr-3"><span class="icon-facebook"></span></a>
-            </p>
-          </div>
-          <div class="col-md-6 col-lg-4 text-center mb-5">
-            <img src="{{ asset('assets/images/person_4.jpg') }}" alt="Image" class="img-fluid w-50 rounded-circle mb-3">
-            <h2 class="text-black font-weight-light mb-4">John Smith</h2>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Pariatur ab quas facilis obcaecati non ea, est odit repellat distinctio incidunt, quia aliquam eveniet quod deleniti impedit sapiente atque tenetur porro?</p>
-            <p>
-              <a href="#" class="pl-0 pr-3"><span class="icon-twitter"></span></a>
-              <a href="#" class="pl-3 pr-3"><span class="icon-instagram"></span></a>
-              <a href="#" class="pl-3 pr-3"><span class="icon-facebook"></span></a>
-            </p>
-          </div>
+          @foreach($podcasters as $podcaster)
+            <div class="col-md-6 col-lg-4 text-center mb-5">
+              <img src="{{ asset('assets/images/person_1.jpg') }}" alt="Image" class="img-fluid w-50 rounded-circle mb-3">
+              <h2 class="text-black font-weight-light mb-4">{{ $podcaster->name }}</h2>
+              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Pariatur ab quas facilis obcaecati non ea, est odit repellat distinctio incidunt, quia aliquam eveniet quod deleniti impedit sapiente atque tenetur porro?</p>
+              <p>
+                <a href="#" class="pl-0 pr-3"><span class="icon-twitter"></span></a>
+                <a href="#" class="pl-3 pr-3"><span class="icon-instagram"></span></a>
+                <a href="{{ $podcaster->facebook_id }}" class="pl-3 pr-3"><span class="icon-facebook"></span></a>
+              </p>
+            </div>
+          @endforeach
         </div>
       </div>
     </div>
