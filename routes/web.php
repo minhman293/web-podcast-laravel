@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Podcaster\PodCasterController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,11 +15,10 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('user_profile');
+    return view('index');    
 });
-// Route::get('/', function () {
-//     return view('index');
-// });
+
+
 
 Route::get('/about', function () {
     return view('about');
@@ -37,3 +37,10 @@ Route::group(['prefix' => 'auth' ], function() {
 Route::get('/podcast/{id}', function () {
     return view('podcast.single-podcast');
 });
+
+Route::group(['prefix' => 'podcasters', 'as' => 'podcasters.' ], function() {
+    Route::get('/edit/{podcaster}', [PodCasterController::class, 'edit'])->name('edit');
+    Route::put('/update/{podcaster}', [PodCasterController::class, 'update'])->name('update');
+    Route::get('/{podcaster}', [PodCasterController::class, 'index'])->name('index');
+});
+

@@ -51,29 +51,55 @@
     </header>
 
     <main class="profile_page">
-      <h2>Profile Podcaster</h2>
-      <div class="profile_page__image flex">
-          <img src="{{ asset('/assets/images/person_1.jpg') }}" alt="">
-          <button>Change photo</button>
+      <div class="container pt-2 hero">
+        <h2>Profile</h2>
+        <form action="{{ route('podcasters.update', $podcaster->id) }}" method="POST" enctype="multipart/form-data">
+          @csrf
+          @method('PUT')
+        <div class="row align-items-center text-center text-md-left">
+          
+          <div class="col-lg-8">
+            <h3>Image</h3>
+            <p>Photos will appear with your channel in places like next to your profile comments.</p>
+            <div class="profile_page__image_change flex">
+              <img src="{{ asset('/assets/images/' . $podcaster->image) }}" alt="{{ $podcaster->name }}">
+              <div>
+                <p>We recommend images that are at least 98 x 98 pixels in resolution and 4 MB in size. Use PNG or GIF files (no animations).</p>
+                <!-- Hidden file input -->
+                <input type="file" name="image" id="imageInput" class="form-control" style="display: none;" onchange="showFileName()">
+                <button type="button" onclick="document.getElementById('imageInput').click()">Change photo</button>
+                <p id="fileName" style="margin-top: 10px; font-size: 14px; color: gray;"></p>
+              </div>
+         
+          </div>
+        <div class="form-group">
+        <h3 style="margin-top: 20px">Name</h3>
+        <p>Choose a name that reflects your personality and content. Changes to your name and avatar only appear on Podcasts and not on other services.</p>
+        <input 
+          type="text" 
+          id="channelName" 
+          name="channelName" 
+          value="{{ old('channelName', $podcaster->name) }}" 
+          placeholder="Nhập tên kênh của bạn" 
+          class="form-control">
+        </div>
+          </div>
+            <div class="col-lg-4">
+              <img src="{{ asset('assets/images/1x/asset-1.png') }}" alt="Image" class="img-fluid">    
+            </div>
+          </div>
+          <button type="submit" class="profile__link_btn" href="">Save</button>
       </div>
-
-      <div class="profile_page__name grid-3">
-        <p>Full Name</p>
-        <p>Le Ngoc Hao</p>
-        <a class="profile_page__edit_name">Edit the name</a>
-      </div>
-
-      <div class="profile_page__email grid-3">
-        <p>Email Address</p>
-        <p>haodeptrai123@gmail.com</p>
-      </div>
+      </form>
       
+     
+
     </main>
     
    
-    
 
-    <footer class="site-footer">
+
+              <footer class="site-footer">
       <div class="container">
         <div class="row">
           <div class="col-lg-4">
@@ -115,22 +141,16 @@
 
   <script src="{{ asset('assets/js/main.js') }}"></script>
   <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const fullNameInput = document.getElementById('fullName');
-        const editNameButton = document.getElementById('editName');
-        
-        editNameButton.addEventListener('click', function () {
-            if (fullNameInput.readOnly) {
-                fullNameInput.readOnly = false;
-                fullNameInput.focus();
-                editNameButton.textContent = 'Save';
-            } else {
-                fullNameInput.readOnly = true;
-                editNameButton.textContent = 'Edit the name';
-                alert(`Name updated to: ${fullNameInput.value}`);
-            }
-        });
-    });
-  </script>
+    function showFileName() {
+        const fileInput = document.getElementById('imageInput');
+        const fileNameDisplay = document.getElementById('fileName');
+
+        if (fileInput.files.length > 0) {
+            fileNameDisplay.textContent = `Selected file: ${fileInput.files[0].name}`;
+        } else {
+            fileNameDisplay.textContent = '';
+        }
+    }
+</script>
 </body>
 </html>

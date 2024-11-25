@@ -14,12 +14,19 @@
 .profile_page {
     margin: 0.5em;
     margin-left: 4em;
-    
+
 }
+
 .profile_page__image img {
     height: 7em;
     width: 7em;
     border-radius: 50%;
+    overflow: hidden;
+}
+
+.profile_page__image_change img {
+    height: 10em;
+    width: 20em;
     overflow: hidden;
 }
 
@@ -29,10 +36,59 @@
     cursor: pointer;
 }
 
+.profile_page__image_change button {
+    background: transparent;
+    border-radius: .25em;
+    cursor: pointer;
+}
+
 .profile_page__image {
     padding-bottom: 0.5em;
 }
+
 .profile_page__edit_name {
     color: dodgerblue !important;
     font-weight: bold;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    font-size: 14px;
+    color: #555;
+}
+
+.form-group p {
+    font-size: 18px;
+    color: #888;
+    margin: 5px 0 10px;
+}
+
+.form-group input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    margin-right: 50em;
+}
+
+.form-group input[type="text"]:focus {
+    border-color: #0073e6;
+    outline: none;
+}
+
+.profile__link_btn {
+    border: 1.5px solid black;
+    background: transparent;
+    display: inline-block;
+    padding: 0.5em 0.5em;
+    border-radius: .25em;
+    font-weight: bold;
+    color: black;
+    margin-inline: 0.3em ;
+    cursor: pointer;
 }
