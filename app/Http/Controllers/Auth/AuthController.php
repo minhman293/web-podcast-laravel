@@ -8,7 +8,7 @@ use App\Http\Requests\Web\Auth\RegisterRequest;
 use Illuminate\Http\Request;
 use App\Services\AuthService;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Podcaster as PodcasterModel;
+use App\Models\Podcaster;
 use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
@@ -36,7 +36,7 @@ class AuthController extends Controller
             return redirect()->route('index')->with('success', 'login successfully');
         }
 
-        return redirect()->route('get_login')->with('error', $loginResult['message']);
+        return redirect()->route('get_login')->with('error', 'login failed');
     }
 
     public function getRegister() 
@@ -47,14 +47,16 @@ class AuthController extends Controller
     public function register(RegisterRequest $registerRequest)
     {
         $validRegister = $registerRequest->validated();
+        Log::info('Register request validated: ' . json_encode($validRegister));
 
         $registerResult = $this->authService->register($validRegister);
+        Log::info('Register result: ' . json_encode($registerResult));
 
-        if($registerResult instanceof PodcasterModel) {
-            return redirect()->route('get_login')->with('success', 'Register successfully');
+        if($registerResult instanceof Podcaster) {
+            return redirect()->route('verification.notice')->with('success', 'Please verify your email address.');
         }
 
-        return redirect()->route('get_register')->with('error', 'Register failed');
+        return redirect()->route('get_register')->with('error', 'Registration failed');
     }
 
     public function logout()

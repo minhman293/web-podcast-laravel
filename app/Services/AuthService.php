@@ -5,6 +5,9 @@ namespace App\Services;
 use App\Models\Podcaster;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Support\Facades\DB;
 
 class AuthService
 {
@@ -18,11 +21,22 @@ class AuthService
     public function register($data)
     {
         try {
+            DB::beginTransaction();
+
             $podcaster = $this->podcaster->create($data);
+            Log::info('Podcaster created: ' . $podcaster->id);
+
+            $podcaster->sendEmailVerificationNotification();
+            Log::info('Email verification sent to: ' . $podcaster->email);
+
+
+            DB::commit();
 
             return $podcaster;
         } catch (\Exception $e) {
-            return $e->getMessage();
+            DB::rollBack();
+            Log::error('Registration error: ' . $e->getMessage());
+            return null;
         }
     }
 
@@ -30,23 +44,7 @@ class AuthService
     {
         $podcaster = $this->podcaster->where('email', $data['email'])->first();
 
-        // debug
-        // if (!$podcaster) {
-        //     return [
-        //         'status' => false,
-        //         'message' => 'Email not found'
-        //     ];
-        // }
-
         $isPasswordValid = Hash::check($data['password'], $podcaster->password);
-
-        // debug
-        // if (!$isPasswordValid) {
-        //     return [
-        //         'status' => false,
-        //         'message' => 'Invalid password'
-        //     ];
-        // }
 
         if(!$podcaster || !$isPasswordValid) {
             return [
