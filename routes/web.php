@@ -55,7 +55,7 @@ Route::middleware(['web'])->group(function(){
     Route::get('/podcast/{id}', function () {
         return view('podcast.single-podcast');
     });
-
+});
 
 Route::get('/crud/add',[PodcastController::class, 'loadAddPage'])->name('podcast.loadAddPage');
 Route::post('/crud/add',[PodcastController::class, 'addPodcast'])->name('podcast.addPodcast');
