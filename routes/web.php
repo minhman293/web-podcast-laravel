@@ -22,7 +22,8 @@ use Illuminate\Support\Facades\Mail;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::middleware(['web'])->group(function(){
+
+Route::middleware(['web'])->group(function () {
     Route::get('/', function () {
         return view('index');
     })->name('index');
@@ -35,8 +36,13 @@ Route::middleware(['web'])->group(function(){
         return view('contact');
     })->name('contact');
 
+    Route::group(['prefix' => 'auth', 'as' => 'auth.'], function () {
+        Route::get('/{provider}/redirect', [AuthController::class, 'redirectSocial'])->name('social.redirect');
+        Route::get('/{provider}/callback', [AuthController::class, 'callbackSocial'])->name('social.callback');
+    });
+
     Auth::routes(['verify' => true]);
-    
+
     Route::get('/login', [AuthController::class, 'getLogin'])->name('get_login');
     Route::get('/register', [AuthController::class, 'getRegister'])->name('get_register');
     Route::post('/login', [AuthController::class, 'login'])->name('login');
@@ -55,8 +61,6 @@ Route::middleware(['web'])->group(function(){
     Route::get('/podcast/{id}', function () {
         return view('podcast.single-podcast');
     });
-});
-
 Route::get('/crud/add',[PodcastController::class, 'loadAddPage'])->name('podcast.loadAddPage');
 Route::post('/crud/add',[PodcastController::class, 'addPodcast'])->name('podcast.addPodcast');
 
@@ -67,4 +71,3 @@ Route::put('/crud/update/{id}', [PodcastController::class, 'updatePodcast'])->na
 
 Route::get('/crud', [PodcastController::class, 'index']) -> name('podcast.crud');
 Route::get('/podcast/{id}', [PodcastController::class, 'show']);
-

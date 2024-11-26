@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\DB;
+use Exception;
 
 class AuthService
 {
@@ -46,7 +47,7 @@ class AuthService
 
         $isPasswordValid = Hash::check($data['password'], $podcaster->password);
 
-        if(!$podcaster || !$isPasswordValid) {
+        if (!$podcaster || !$isPasswordValid) {
             return [
                 'status' => false,
                 'message' => 'Invalid email or password'
@@ -65,5 +66,24 @@ class AuthService
         Auth::logout();
 
         return true;
+    }
+
+    public function loginSocial($params, string $provider)
+    {
+        try {
+            return Podcaster::firstOrCreate(
+                [$provider . '_id' => $params->id],
+                [
+                    'name' => $params->name,
+                    'email' => $params->email,
+                    'password' => 'SOCIAL_AUTHENTICATION',
+                    'image' => $params->avatar,
+                    $provider . '_id' => $params->id,
+                ]
+            );
+        } catch (Exception $e) {
+            Log::error($e);
+            return null;
+        }
     }
 }
