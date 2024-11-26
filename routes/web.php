@@ -25,7 +25,7 @@ use Illuminate\Support\Facades\Mail;
 Route::middleware(['web'])->group(function(){
     Route::get('/', function () {
         return view('index');
-    })->name('index');
+    })->name('index');  
 
     Route::get('/about', function () {
         return view('about');
@@ -55,6 +55,7 @@ Route::middleware(['web'])->group(function(){
     Route::get('/podcast/{id}', function () {
         return view('podcast.single-podcast');
     });
+});
 
 
 Route::get('/crud/add',[PodcastController::class, 'loadAddPage'])->name('podcast.loadAddPage');
