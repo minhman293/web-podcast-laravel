@@ -90,7 +90,10 @@
                             {{ session('error') }}
                         </div>
                         @endif
-
+                        <a href="{{ route('auth.social.redirect', ['provider' => 'google']) }}" class="google_login_btn">
+                            <img src="{{ asset('/assets/images/google_icon.png') }}" width="30px"> 
+                            Login with Google 
+                        </a>
                         <form action="{{ route('register') }}" method="post" class="bg-white" enctype="multipart/form-data">
                             @csrf
 
