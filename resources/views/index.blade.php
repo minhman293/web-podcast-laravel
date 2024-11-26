@@ -416,7 +416,9 @@
         <div class="nonloop-block-13 owl-carousel">
 
           <div class="text-center p-3 p-md-5 bg-white">
+
             <div class="mb-4">
+
               <img src="{{ asset('assets/images/person_1.jpg') }}" alt="Image" class="w-50 mx-auto img-fluid rounded-circle">
             </div>
             <div class="">

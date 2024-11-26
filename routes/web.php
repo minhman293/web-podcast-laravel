@@ -5,8 +5,12 @@ use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use Illuminate\Support\Facades\Route;
+
+use App\Http\Controllers\PodcastController;
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -52,4 +56,15 @@ Route::middleware(['web'])->group(function(){
         return view('podcast.single-podcast');
     });
 
-});
+
+Route::get('/crud/add',[PodcastController::class, 'loadAddPage'])->name('podcast.loadAddPage');
+Route::post('/crud/add',[PodcastController::class, 'addPodcast'])->name('podcast.addPodcast');
+
+Route::delete('/crud/delete/{id}', [PodcastController::class, 'deletePodcast'])->name('podcast.deletePodcast');
+
+Route::get('/crud/update/{id}', [PodcastController::class, 'loadUpdatePage'])->name('podcast.loadUpdatePage');
+Route::put('/crud/update/{id}', [PodcastController::class, 'updatePodcast'])->name('podcast.updatePodcast');
+
+Route::get('/crud', [PodcastController::class, 'index']) -> name('podcast.crud');
+Route::get('/podcast/{id}', [PodcastController::class, 'show']);
+
