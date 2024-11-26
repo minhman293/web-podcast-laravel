@@ -89,7 +89,16 @@
               <source src="{{ asset($podcast->audio) }}" type="audio/mp3">
             </audio>
           </div>
-          <input type="submit" style="margin-top: 20px; margin-bottom: 20px" class="btn btn-primary" value="Follow">
+          @if(Auth::check())
+              @php
+                $isFollowing = \App\Models\PodcasterFollower::where('podcaster_id', $podcast->podcaster->id)
+                                                            ->where('follower_id', Auth::id())
+                                                            ->exists();
+              @endphp
+              <button id="follow-btn" class="btn btn-primary" style="margin-top: 20px; margin-bottom: 20px;">
+                {{ $isFollowing ? 'UnFollow' : 'Follow' }}
+              </button>
+          @endif
         </div>
         <div class="col-lg-8">
           <img src="{{ asset($podcast->image) }}" alt="Image" class="img-fluid"> 
@@ -429,6 +438,40 @@
   </div>
 
   @include('partials.scripts')
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const followBtn = document.getElementById('follow-btn');
+
+      if (followBtn) {
+          followBtn.addEventListener('click', () => {
+              const isFollowing = followBtn.textContent.trim() === 'UnFollow';
+              const url = isFollowing ? '{{ route('unfollow') }}' : '{{ route('follow') }}';
+              const podcasterId = '{{ $podcast->podcaster->id }}';
+              const token = '{{ csrf_token() }}';
+
+              fetch(url, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'X-CSRF-TOKEN': token
+                },
+                body: JSON.stringify({ podcaster_id: podcasterId })
+              })
+              .then(response => response.json())
+              .then(data => {
+                if (data.status === 1) {
+                  followBtn.textContent = isFollowing ? 'Follow' : 'UnFollow';
+                } else {
+                  alert(data.message);
+                }
+              })
+              .catch(error => console.error('Error:', error));
+          });
+      }
+    });
+  </script>
+
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {

@@ -24,6 +24,7 @@ use App\Http\Controllers\API\PodcastController;
 
 Route::post("register", [AuthController::class, "register"]);
 Route::post("login", [AuthController::class, "login"]);
+Route::post('login_api', [AuthController::class, 'login_api']);
 Route::get("checkSession", [AuthController::class, "checkSession"]);
 
 Route::get("podcast_list", [PodcastController::class, "podcast_list"]);

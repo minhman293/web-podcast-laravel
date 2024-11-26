@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\PodcastController;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\PodCommentsController;
+use App\Http\Controllers\API\PodcasterFollowerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -55,3 +56,6 @@ Route::middleware('auth:sanctum')->group(function () {
 // Route::get('/podcast/{id}', function () {
 //     return view('podcast.single-podcast');
 // });
+
+Route::post('/follow', [PodcasterFollowerController::class, 'follow'])->name('follow');
+Route::post('/unfollow', [PodcasterFollowerController::class, 'unfollow'])->name('unfollow');
