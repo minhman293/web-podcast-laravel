@@ -69,7 +69,10 @@
     <div class="container pt-5 hero">
       <div class="row align-items-center text-center text-md-left">
         <div class="col-lg-6">
-          <h1 class="mb-3 display-3">LE HA BINH</h1>
+          @auth
+            <h1 class="mb-3 display-4">Welcome, {{ auth()->user()->name }}</h1>
+            <p>{{ auth()->user()->email }}</p>
+          @endauth
           <p>Below is your podcast that you uploaded, you can add, delete, update them when ever you want !</p>
           <div class="text-left mb-4">
             <p class=""> If you want to update your profile</p>
@@ -128,9 +131,10 @@
                     </button>
                 </div>
             @endif
-                      @foreach($podcasts as $podcast)
+            @if(Auth::check())
+              @if($podcasts->count() > 0)
+                @foreach($podcasts as $podcast)
                       <div class="d-block d-md-flex podcast-entry bg-white mb-5" data-aos="fade-up">
-                          <!-- <div class="image" style="background-image: url('{{ $podcast->image }}');"></div> -->
                           @php
                               $isImageUrl = filter_var($podcast->image, FILTER_VALIDATE_URL);
                               $imageSource = $isImageUrl ? $podcast->image : asset('storage/podcasts/images/' . $podcast->image);
@@ -143,34 +147,46 @@
                               <p class="mb-4">{{ $podcast->description }}</p>
                               <div class="player">
                                 <audio id="player2" preload="none" controls style="max-width: 100%">
-                                @php
-                                    $isUrl = filter_var($podcast->audio, FILTER_VALIDATE_URL);
-                                    $audioSource = $isUrl ? $podcast->audio : asset('storage/podcasts/audio/' . $podcast->audio);
-                                @endphp
-                                <source src="{{ $audioSource }}" type="audio/mp3">
+                                  @php
+                                      $isUrl = filter_var($podcast->audio, FILTER_VALIDATE_URL);
+                                      $audioSource = $isUrl ? $podcast->audio : asset('storage/podcasts/audio/' . $podcast->audio);
+                                  @endphp
+                                  <source src="{{ $audioSource }}" type="audio/mp3">
                                 </audio>
-                              </div>
+                              </div>                            
                                 <form action="{{ route('podcast.deletePodcast', $podcast->id) }}" method="POST" class="d-inline">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-danger delete-button mt-3" onclick="return confirm('Are you sure you want to delete this podcast?')">Delete</button>
                                 </form>
                                 <a href="{{ route('podcast.loadUpdatePage', $podcast->id) }}" type="submit" class="btn btn-info delete-button mt-3" style="color: white;">Update</a>
-                    
                           </div>
                       </div>
-                      @endforeach
-
-          
-
-                    </div>
-                    <div class="container" data-aos="fade-up">
-                      <div class="row">
-                        <div class="col-md-12 text-center">
-                            {{ $podcasts->links('pagination::bootstrap-4') }}
-                        </div>
+                     
+                    @endforeach
+                      
+                    @if($podcasts->total() > 5)
+                      <div class="container" data-aos="fade-up">
+                          <div class="row">
+                              <div class="col-md-12 text-center">
+                                  {{ $podcasts->links('pagination::bootstrap-4') }}
+                              </div>
+                          </div>
                       </div>
+                    @endif
+                  @else
+                      <div class="alert alert-info text-center">
+                        You haven't add any podcast.
+                      </div>
+                  @endif
+            @else
+                <div class="alert alert-info">
+                    Please login to view your podcasts.
+                </div>
+            @endif
+
                     </div>
+                    
                     
           </div>
 

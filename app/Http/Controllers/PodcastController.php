@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use App\Models\Podcast;
 use App\Models\Category;
 use Illuminate\Http\Request;
@@ -14,9 +15,14 @@ class PodcastController extends Controller
     {
         try {
             $search = $request->input('search');
-            
             $query = Podcast::query();
     
+            // Get current podcaster's id
+            $podcasterId = Auth::id();
+            
+            // Filter by podcaster
+            $query->where('podcaster_id', $podcasterId);
+            
             // If search term exists
             if ($search) {
                 $query->where(function($q) use ($search) {
@@ -61,13 +67,14 @@ class PodcastController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'author' => 'required|string',
+            'podcaster_id' => 'required|string',
             'audio' => 'required|file|mimes:mp3,wav,ogg|max:51200', // 50MB max
             'image' => 'required|image|mimes:jpeg,png,jpg|max:2048', // 2MB max
             'category_id' => 'required|exists:categories,id',
         ]);
 
         try {
+            $podcasterId = Auth::user()->id;
             // Handle audio file upload
             if ($request->hasFile('audio')) {
                 $audioFile = $request->file('audio');
@@ -82,6 +89,8 @@ class PodcastController extends Controller
                 // Make sure the directory exists
                 $audioPath = $audioFile->storeAs('public/podcasts/audio', $audioFileName);
                 
+                $request->merge(['podcaster_id' => $podcasterId]);
+
                 if (!$audioPath) {
                     return back()->with('error', 'Failed to save audio file')->withInput();
                 }
@@ -115,12 +124,11 @@ class PodcastController extends Controller
             $podcast = Podcast::create([
                 'title' => $request->title,
                 'description' => $request->description,
-                // 'author' => $request->author,
                 'audio' => $audioFileName,
                 'image' => $imageFileName,
                 'duration' => $request->duration,
                 'category_id' => $request->category_id,
-                'podcaster_id' => 1, // Uncomment if you want to add a podcaster relationship to the podcast.
+                'podcaster_id' => $request->podcaster_id, // Uncomment if you want to add a podcaster relationship to the podcast.
             ]);
 
             return redirect()->route('podcast.crud')->with('success', 'Podcast added successfully!');
@@ -170,7 +178,7 @@ class PodcastController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'author' => 'required|string',
+            'podcaster_id' => 'required|string',
             'audio' => 'nullable|file|mimes:mp3,wav,ogg|max:51200', // 50MB max
             'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048', // 2MB max
             'category_id' => 'required|exists:categories,id',
@@ -226,19 +234,10 @@ class PodcastController extends Controller
             // Update podcast details
             $podcast->title = $request->title;
             $podcast->description = $request->description;
-            // $podcast->author = $request->author;
             $podcast->duration = $request->duration;
             $podcast->category_id = $request->category_id;
-            $podcast->podcaster_id = 2; // Uncomment if you want to add a podcaster relationship to the podcast.
+            $podcast->podcaster_id = $request->podcaster_id; // Uncomment if you want to add a podcaster relationship to the podcast.
             $podcast->save();
-
-            // 'title' => $request->title,
-            //     'description' => $request->description,
-            //     'audio' => $audioFileName,
-            //     'image' => $imageFileName,
-            //     'duration' => $request->duration,
-            //     'category_id' => $request->category_id,
-            //     'podcaster_id' => 1,
 
             return redirect()->route('podcast.crud')->with('success', 'Podcast updated successfully!');
         } catch (\Exception $e) {

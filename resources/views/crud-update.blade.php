@@ -103,8 +103,8 @@
                   </div>
                   
                   <div class="form-group">
-                      <label for="author">Podcast Author</label>
-                      <input type="text" class="form-control" id="author" name="author" value="{{ $podcast->author }}" required>
+                      <label for="podcaster_id">Podcast Author</label>
+                      <input type="text" class="form-control" id="podcaster_id" name="podcaster_id" value="{{ $podcast->podcaster_id }}" readonly>
                   </div>
 
                   <div class="form-group">
@@ -129,6 +129,26 @@
                       <small class="form-text text-muted">Maximum file size: 50MB. Leave empty to keep existing audio.</small>
                       <div class="mt-2">Current audio: {{ $podcast->audio }}</div>
                   </div>
+                  <script>
+                    document.getElementById('audio').addEventListener('change', function(e) {
+                        const file = e.target.files[0];
+                        const audio = document.createElement('audio');
+                        const reader = new FileReader();
+
+                        reader.onload = function(e) {
+                            audio.src = e.target.result;
+                            
+                            // When audio metadata is loaded, get duration
+                            audio.addEventListener('loadedmetadata', function() {
+                                // Round duration to whole number
+                                const duration = Math.round(audio.duration);
+                                document.getElementById('duration').value = duration;
+                            });
+                        };
+
+                        reader.readAsDataURL(file);
+                    });
+                  </script>
 
                   <div class="form-group">
                       <label for="image">New Podcast Image (optional)</label>

@@ -117,8 +117,8 @@
                   </div>
                   
                   <div class="form-group">
-                      <label for="author">Podcast Author</label>
-                      <input type="text" class="form-control" id="author" name="author" required>
+                      <label for="podcaster_id">Podcast Author ID</label>
+                      <input type="text" class="form-control" id="podcaster_id" name="podcaster_id" value="{{ Auth::user()->id }}" readonly>
                   </div>
 
                   <div class="form-group">
