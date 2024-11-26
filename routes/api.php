@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Podcaster\PodCasterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,3 +18,12 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+// Route::middleware('auth:sanctum')->group(function () {
+//     Route::post('/podcasters/{podcaster}/subscribe', [PodCasterController::class, 'subscribe'])->name('api.podcasters.subscribe');
+//     Route::post('/podcasters/{podcaster}/unsubscribe', [PodCasterController::class, 'unsubscribe'])->name('api.podcasters.unsubscribe');
+// });
+Route::post('/podcasters/{podcaster}/subscribe', [PodCasterController::class, 'subscribe'])->name('api.podcasters.subscribe');
+
+Route::post('/podcasters/{podcaster}/unsubscribe', [PodCasterController::class, 'unsubscribe'])->name('api.podcasters.unsubscribe');
+
+

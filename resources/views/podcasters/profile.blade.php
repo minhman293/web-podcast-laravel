@@ -64,25 +64,32 @@
         <div>
             <h3>{{ $podcaster->name }}</h3>
             <p>{{ $podcaster->email }}</p>
+            <p>Followers: {{ $followersCount}}</p>
+
             @if ($is_owner)
                 <a class="profile__link_btn" href="{{ route('podcasters.edit', $podcaster->id) }}">Update information</a>
+                <a class="profile__link_btn" href="{{ route('podcasters.edit', $podcaster->id) }}">Podcast Management</a>
             @endif
-            <a class="profile__link_btn" href="{{ route('podcasters.edit', $podcaster->id) }}">Podcast Management</a>
-            {{-- <button>Podcast Management</button> --}}
+
+                @if (auth()->check())
+                    @if ($isSubscribed)
+                        <!-- Nút hủy đăng ký -->
+                        <form action="{{ route('api.podcasters.unsubscribe', $podcaster->id) }}" method="POST" style="display: inline;">
+                            @csrf
+                            <button type="submit" class="profile__link_btn">Unfollow</button>
+                        </form>
+                    @else
+                        <!-- Nút đăng ký -->
+                        <form action="{{ route('api.podcasters.subscribe', $podcaster->id) }}" method="POST" style="display: inline;">
+                            @csrf
+                            <button type="submit" class="profile__link_btn">Follow</button>
+                        </form>
+                    @endif
+                @endif 
         </div>
 
     </div>
 
-    {{-- <div class="profile_page__name grid-3">
-<p>Full Name</p>
-<p>Le Ngoc Hao</p>
-<a class="profile_page__edit_name">Edit the name</a>
-</div>
-
-<div class="profile_page__email grid-3">
-<p>Email Address</p>
-<p>haodeptrai123@gmail.com</p>
-</div> --}}
     <div class="site-section">
         <h3>Playlists</h3>
         <div class="container">

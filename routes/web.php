@@ -42,5 +42,10 @@ Route::group(['prefix' => 'podcasters', 'as' => 'podcasters.' ], function() {
     Route::get('/edit/{podcaster}', [PodCasterController::class, 'edit'])->name('edit');
     Route::put('/update/{podcaster}', [PodCasterController::class, 'update'])->name('update');
     Route::get('/{podcaster}', [PodCasterController::class, 'index'])->name('index');
+
+    
 });
+
+
+
 
