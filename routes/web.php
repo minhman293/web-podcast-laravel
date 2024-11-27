@@ -1,25 +1,18 @@
 <?php
 
 
+use App\Http\Controllers\Home\HomeController;
 use App\Http\Controllers\Podcaster\PodCasterController;
 
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
-
 use Illuminate\Support\Facades\Route;
-
-use App\Http\Controllers\PodcastController;
-
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
-
 use App\Http\Controllers\Podcast\PodcastController;
 use App\Http\Controllers\Comment\CommentController;
 use App\Http\Controllers\PodcasterFollower\PodcasterFollowerController;
-use App\Http\Controllers\Podcaster\PodcasterController;
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -31,8 +24,8 @@ use App\Http\Controllers\Podcaster\PodcasterController;
 |
 */
 
-Route::middleware(['web'])->group(function(){
-    Route::get('/', [PodcastController::class, 'index'])->name('index');
+Route::middleware(['web'])->group(function () {
+    Route::get('/', [HomeController::class, 'index'])->name('index');
 
     Route::get('/about', function () {
         return view('about');
@@ -50,12 +43,12 @@ Route::middleware(['web'])->group(function(){
 
 
 
-Route::group(['prefix' => 'podcasters', 'as' => 'podcasters.' ], function() {
-    Route::get('/edit/{podcaster}', [PodCasterController::class, 'edit'])->name('edit');
-    Route::put('/update/{podcaster}', [PodCasterController::class, 'update'])->name('update');
-    Route::get('/{podcaster}', [PodCasterController::class, 'index'])->name('index');
-  
-});
+    Route::group(['prefix' => 'podcasters', 'as' => 'podcasters.'], function () {
+        Route::get('/edit/{podcaster}', [PodCasterController::class, 'edit'])->name('edit');
+        Route::put('/update/{podcaster}', [PodCasterController::class, 'update'])->name('update');
+        Route::get('/{podcaster}', [PodCasterController::class, 'index'])->name('index');
+
+    });
 
 
     Auth::routes(['verify' => true]);
@@ -75,9 +68,6 @@ Route::group(['prefix' => 'podcasters', 'as' => 'podcasters.' ], function() {
     Route::get('password/reset/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
     Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
 
-    // Route::get('/podcast/{id}', function () {
-    //     return view('podcast.single-podcast');
-    // });
     Route::get('/{category}/podcast/{id}', [PodcastController::class, 'podcast_detail'])->name('podcast.podcast_detail');
 
     Route::middleware('auth:sanctum')->group(function () {
@@ -89,21 +79,21 @@ Route::group(['prefix' => 'podcasters', 'as' => 'podcasters.' ], function() {
     Route::post('/follow', [PodcasterFollowerController::class, 'follow'])->name('follow');
     Route::post('/unfollow', [PodcasterFollowerController::class, 'unfollow'])->name('unfollow');
 
-    Route::group(['prefix' => 'podcasters', 'as' => 'podcasters.' ], function() {
+    Route::group(['prefix' => 'podcasters', 'as' => 'podcasters.'], function () {
         Route::get('/edit/{podcaster}', [PodcasterController::class, 'edit'])->name('edit');
         Route::put('/update/{podcaster}', [PodCasterController::class, 'update'])->name('update');
         Route::get('/{podcaster}', [PodCasterController::class, 'index'])->name('index');
     });
-Route::get('/crud/add',[PodcastController::class, 'loadAddPage'])->name('podcast.loadAddPage');
-Route::post('/crud/add',[PodcastController::class, 'addPodcast'])->name('podcast.addPodcast');
+    Route::get('/crud/add', [PodcastController::class, 'loadAddPage'])->name('podcast.loadAddPage');
+    Route::post('/crud/add', [PodcastController::class, 'addPodcast'])->name('podcast.addPodcast');
 
-Route::delete('/crud/delete/{id}', [PodcastController::class, 'deletePodcast'])->name('podcast.deletePodcast');
+    Route::delete('/crud/delete/{id}', [PodcastController::class, 'deletePodcast'])->name('podcast.deletePodcast');
 
-Route::get('/crud/update/{id}', [PodcastController::class, 'loadUpdatePage'])->name('podcast.loadUpdatePage');
-Route::put('/crud/update/{id}', [PodcastController::class, 'updatePodcast'])->name('podcast.updatePodcast');
+    Route::get('/crud/update/{id}', [PodcastController::class, 'loadUpdatePage'])->name('podcast.loadUpdatePage');
+    Route::put('/crud/update/{id}', [PodcastController::class, 'updatePodcast'])->name('podcast.updatePodcast');
 
-Route::get('/crud', [PodcastController::class, 'index']) -> name('podcast.crud');
-Route::get('/podcast/{id}', [PodcastController::class, 'show']);
+    Route::get('/crud', [PodcastController::class, 'index'])->name('podcast.crud');
+    Route::get('/podcast/{id}', [PodcastController::class, 'show']);
 
     Route::post('/podcasters/{podcaster}/subscribe', [PodCasterFollowerController::class, 'subscribe'])->name('podcasters.subscribe');
     Route::post('/podcasters/{podcaster}/unsubscribe', [PodCasterFollowerController::class, 'unsubscribe'])->name('podcasters.unsubscribe');
