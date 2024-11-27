@@ -19,8 +19,6 @@ class PodcasterFollower extends Model
         'follower_id'
     ];
 
-    public $incrementing = false;
-
     public function podcaster_follow()
     {
         return $this->belongsTo(Podcaster::class, 'podcaster_id');
