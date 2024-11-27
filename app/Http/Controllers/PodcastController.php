@@ -16,6 +16,7 @@ class PodcastController extends Controller
         try {
             $search = $request->input('search');
             $query = Podcast::query();
+            $showDeleted = $request->input('show_deleted', false);
     
             // Get current podcaster's id
             $podcasterId = Auth::id();
@@ -23,6 +24,9 @@ class PodcastController extends Controller
             // Filter by podcaster
             $query->where('podcaster_id', $podcasterId);
             
+            if ($showDeleted) {
+                $query->onlyTrashed(); // Chỉ hiển thị podcast đã xóa
+            }
             // If search term exists
             if ($search) {
                 $query->where(function($q) use ($search) {
@@ -37,16 +41,30 @@ class PodcastController extends Controller
                              ->withQueryString(); // Preserves query parameters in pagination links
     
             // If AJAX request, return partial view
-            if ($request->ajax()) {
-                return view('partials.podcast-list', compact('podcasts'))->render();
-            }
+            // if ($request->ajax()) {
+            //     return view('partials.podcast-list', compact('podcasts'))->render();
+            // }
     
             // Return full view with results
-            return view('crud', compact('podcasts'));
+            return view('crud', compact('podcasts', 'showDeleted'));
     
         } catch (\Exception $e) {
             \Log::error('Search error: ' . $e->getMessage());
             return back()->with('error', 'An error occurred while searching podcasts');
+        }
+    }
+public function restore($id)
+    {
+        try {
+            $podcast = Podcast::withTrashed()->findOrFail($id);
+            $podcast->restore();
+            
+            return redirect()->route('podcast.crud')
+                ->with('success', 'Podcast restored successfully');
+                
+        } catch (\Exception $e) {
+            \Log::error('Podcast restore error: ' . $e->getMessage());
+            return back()->with('error', 'Error restoring podcast');
         }
     }
 

@@ -132,6 +132,19 @@
                 </div>
             @endif
             @if(Auth::check())
+              <div class="mb-3">
+                <form action="{{ route('podcast.crud') }}" method="GET">
+                    <div class="form-check">
+                        <input type="checkbox"  id="show_deleted" data-aos="fade-up"
+                              name="show_deleted" value="1" 
+                              {{ request('show_deleted') ? 'checked' : '' }}
+                              onChange="this.form.submit()">
+                        <label class="form-check-label" for="show_deleted" data-aos="fade-up">
+                            Show deleted podcasts
+                        </label>
+                    </div>
+                </form>
+              </div>
               @if($podcasts->count() > 0)
                 @foreach($podcasts as $podcast)
                       <div class="d-block d-md-flex podcast-entry bg-white mb-5" data-aos="fade-up">
@@ -153,13 +166,23 @@
                                   @endphp
                                   <source src="{{ $audioSource }}" type="audio/mp3">
                                 </audio>
-                              </div>                            
+                              </div>
+                              @if($podcast->trashed())
+                                <form action="{{ route('podcast.restore', $podcast->id) }}" 
+                                      method="POST" class="d-inline">
+                                    @csrf
+                                    <button type="submit" class="btn btn-success delete-button mt-3">
+                                        Restore
+                                    </button>
+                                </form>
+                              @else                            
                                 <form action="{{ route('podcast.deletePodcast', $podcast->id) }}" method="POST" class="d-inline">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-danger delete-button mt-3" onclick="return confirm('Are you sure you want to delete this podcast?')">Delete</button>
                                 </form>
                                 <a href="{{ route('podcast.loadUpdatePage', $podcast->id) }}" type="submit" class="btn btn-info delete-button mt-3" style="color: white;">Update</a>
+                              @endif
                           </div>
                       </div>
                      
