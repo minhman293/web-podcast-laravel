@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <title>Podcast &mdash; Colorlib Website Template</title>
   <meta charset="utf-8">
@@ -8,8 +9,8 @@
   @include('partials.styles')
 
 </head>
-<body>
 
+<body>
   <div class="site-wrap">
 
     <div class="site-mobile-menu">
@@ -40,7 +41,7 @@
 
               <ul class="site-menu js-clone-nav d-none d-lg-block">
                 <li class="active">
-                  <a href="index.html">Home</a>
+                  <a href="#">Home</a>
                 </li>
                 <li class="has-children">
                   <a href="#">Dropdown</a>
@@ -50,9 +51,23 @@
                     <li><a href="#">Menu Three</a></li>
                   </ul>
                 </li>
-                <li><a href="about.html">About</a></li>
-                <li><a href="contact.html">Contact</a></li>
-                <li><a href="login-register.html">Login / Register</a></li>
+                <li><a href="{{ route('about') }}">About</a></li>
+                <li><a href="{{ route('contact') }}">Contact</a></li>
+
+
+
+                @auth
+                <li><a>Hello, {{ Auth::user()->name }}</a></li>
+                <li><a>
+                    <form method="POST" action="{{ route('logout') }}" class="logout-form">
+                      @csrf
+                      <button type="submit" class="logout-button">Logout</button>
+                    </form>
+                  </a></li>
+                @else
+                <li><a href="{{ route('login') }}">Login</a></li>
+                @endauth
+
               </ul>
             </nav>
 
@@ -61,24 +76,24 @@
 
         </div>
       </div>
-      
+
     </header>
 
-    
+
 
     <div class="container pt-5 hero">
       <div class="row align-items-center text-center text-md-left">
-        
+
         <div class="col-lg-4">
           <h1 class="mb-3 display-3">Tell Your Story to the World</h1>
           <p>Join with us! Login or Register. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Delectus, ex!</p>
         </div>
         <div class="col-lg-8">
-          <img src="{{ asset('assets/images/1x/asset-1.png') }}" alt="Image" class="img-fluid">    
+          <img src="{{ asset('assets/images/1x/asset-1.png') }}" alt="Image" class="img-fluid">
         </div>
       </div>
     </div>
-    
+
 
     <div class="site-section">
       <div class="container">
@@ -150,7 +165,7 @@
 
 
             <div class="d-block d-md-flex podcast-entry bg-white mb-5" data-aos="fade-up">
-              <div class="image" style="background-image: url('{{ asset('assets/images/img_1.jpg') }}');"></div>
+              <div class="image" style="background-image: url('assets/images/img_1.jpg');"></div>
               <div class="text">
 
                 <h3 class="font-weight-light"><a href="single-post.html">Episode 08: How To Create Web Page Using Bootstrap 4</a></h3>
@@ -160,102 +175,102 @@
                 <div class="player">
                   <audio id="player2" preload="none" controls style="max-width: 100%">
                     <source src="http://www.largesound.com/ashborytour/sound/AshboryBYU.mp3" type="audio/mp3">
-                    </audio>
-                  </div>
+                  </audio>
+                </div>
 
+              </div>
+            </div>
+
+
+            <div class="d-block d-md-flex podcast-entry bg-white mb-5" data-aos="fade-up">
+              <div class="image" style="background-image: url('assets/images/img_2.jpg');"></div>
+              <div class="text">
+
+                <h3 class="font-weight-light"><a href="single-post.html">Episode 07: How To Create Web Page Using Bootstrap 4</a></h3>
+                <div class="text-white mb-3"><span class="text-black-opacity-05"><small>By Mike Smith <span class="sep">/</span> 16 September 2017 <span class="sep">/</span> 1:30:20</small></span></div>
+
+                <div class="player">
+                  <audio id="player2" preload="none" controls style="max-width: 100%">
+                    <source src="http://www.largesound.com/ashborytour/sound/AshboryBYU.mp3" type="audio/mp3">
+                  </audio>
+                </div>
+
+              </div>
+            </div>
+
+
+            <div class="d-block d-md-flex podcast-entry bg-white mb-5" data-aos="fade-up">
+              <div class="image" style="background-image: url('assets/images/img_3.jpg');"></div>
+              <div class="text">
+
+                <h3 class="font-weight-light"><a href="single-post.html">Episode 06: How To Create Web Page Using Bootstrap 4</a></h3>
+                <div class="text-white mb-3"><span class="text-black-opacity-05"><small>By Mike Smith <span class="sep">/</span> 16 September 2017 <span class="sep">/</span> 1:30:20</small></span></div>
+
+
+                <div class="player">
+                  <audio id="player2" preload="none" controls style="max-width: 100%">
+                    <source src="http://www.largesound.com/ashborytour/sound/AshboryBYU.mp3" type="audio/mp3">
+                  </audio>
                 </div>
               </div>
+            </div>
 
 
-              <div class="d-block d-md-flex podcast-entry bg-white mb-5" data-aos="fade-up">
-                <div class="image" style="background-image: url('{{ asset('assets/images/img_2.jpg') }}');"></div>
-                <div class="text">
+            <div class="d-block d-md-flex podcast-entry bg-white mb-5" data-aos="fade-up">
+              <div class="image" style="background-image: url('assets/images/img_4.jpg');"></div>
+              <div class="text">
 
-                  <h3 class="font-weight-light"><a href="single-post.html">Episode 07: How To Create Web Page Using Bootstrap 4</a></h3>
-                  <div class="text-white mb-3"><span class="text-black-opacity-05"><small>By Mike Smith <span class="sep">/</span> 16 September 2017 <span class="sep">/</span> 1:30:20</small></span></div>
-
-                  <div class="player">
-                    <audio id="player2" preload="none" controls style="max-width: 100%">
-                      <source src="http://www.largesound.com/ashborytour/sound/AshboryBYU.mp3" type="audio/mp3">
-                      </audio>
-                    </div>
-
-                  </div>
-                </div>
+                <h3 class="font-weight-light"><a href="single-post.html">Episode 05: How To Create Web Page Using Bootstrap 4</a></h3>
+                <div class="text-white mb-3"><span class="text-black-opacity-05"><small>By Mike Smith <span class="sep">/</span> 16 September 2017 <span class="sep">/</span> 1:30:20</small></span></div>
 
 
-                <div class="d-block d-md-flex podcast-entry bg-white mb-5" data-aos="fade-up">
-                  <div class="image" style="background-image: url('{{ asset('assets/images/img_3.jpg') }}');"></div>
-                  <div class="text">
-
-                    <h3 class="font-weight-light"><a href="single-post.html">Episode 06: How To Create Web Page Using Bootstrap 4</a></h3>
-                    <div class="text-white mb-3"><span class="text-black-opacity-05"><small>By Mike Smith <span class="sep">/</span> 16 September 2017 <span class="sep">/</span> 1:30:20</small></span></div>
-
-
-                    <div class="player">
-                      <audio id="player2" preload="none" controls style="max-width: 100%">
-                        <source src="http://www.largesound.com/ashborytour/sound/AshboryBYU.mp3" type="audio/mp3">
-                        </audio>
-                      </div>
-                    </div>
-                  </div>
-
-
-                  <div class="d-block d-md-flex podcast-entry bg-white mb-5" data-aos="fade-up">
-                    <div class="image" style="background-image: url('{{ asset('assets/images/img_4.jpg') }}');"></div>
-                    <div class="text">
-
-                      <h3 class="font-weight-light"><a href="single-post.html">Episode 05: How To Create Web Page Using Bootstrap 4</a></h3>
-                      <div class="text-white mb-3"><span class="text-black-opacity-05"><small>By Mike Smith <span class="sep">/</span> 16 September 2017 <span class="sep">/</span> 1:30:20</small></span></div>
-
-
-                      <div class="player">
-                        <audio id="player2" preload="none" controls style="max-width: 100%">
-                          <source src="http://www.largesound.com/ashborytour/sound/AshboryBYU.mp3" type="audio/mp3">
-                          </audio>
-                        </div>
-                      </div>
-                    </div>
-
-
-                    <div class="d-block d-md-flex podcast-entry bg-white mb-5" data-aos="fade-up">
-                      <div class="image" style="background-image: url('{{ asset('assets/images/img_5.jpg') }}');"></div>
-                      <div class="text">
-
-                        <h3 class="font-weight-light"><a href="single-post.html">Episode 04: How To Create Web Page Using Bootstrap 4</a></h3>
-                        <div class="text-white mb-3"><span class="text-black-opacity-05"><small>By Mike Smith <span class="sep">/</span> 16 September 2017 <span class="sep">/</span> 1:30:20</small></span></div>
-
-
-                        <div class="player">
-                          <audio id="player2" preload="none" controls style="max-width: 100%">
-                            <source src="http://www.largesound.com/ashborytour/sound/AshboryBYU.mp3" type="audio/mp3">
-                            </audio>
-                          </div>
-                        </div>
-                      </div>
-
-
-                    </div>
-                    <div class="container" data-aos="fade-up">
-                      <div class="row">
-                        <div class="col-md-12 text-center">
-                          <div class="site-block-27">
-                            <ul>
-                              <li><a href="#" class="icon-keyboard_arrow_left"></a></li>
-                              <li class="active"><span>1</span></li>
-                              <li><a href="#">2</a></li>
-                              <li><a href="#">3</a></li>
-                              <li><a href="#">4</a></li>
-                              <li><a href="#">5</a></li>
-                              <li><a href="#" class="icon-keyboard_arrow_right"></a></li>
-                            </ul>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                <div class="player">
+                  <audio id="player2" preload="none" controls style="max-width: 100%">
+                    <source src="http://www.largesound.com/ashborytour/sound/AshboryBYU.mp3" type="audio/mp3">
+                  </audio>
                 </div>
               </div>
+            </div>
+
+
+            <div class="d-block d-md-flex podcast-entry bg-white mb-5" data-aos="fade-up">
+              <div class="image" style="background-image: url(assets/images/img_5.jpg);"></div>
+              <div class="text">
+
+                <h3 class="font-weight-light"><a href="single-post.html">Episode 04: How To Create Web Page Using Bootstrap 4</a></h3>
+                <div class="text-white mb-3"><span class="text-black-opacity-05"><small>By Mike Smith <span class="sep">/</span> 16 September 2017 <span class="sep">/</span> 1:30:20</small></span></div>
+
+
+                <div class="player">
+                  <audio id="player2" preload="none" controls style="max-width: 100%">
+                    <source src="http://www.largesound.com/ashborytour/sound/AshboryBYU.mp3" type="audio/mp3">
+                  </audio>
+                </div>
+              </div>
+            </div>
+
+
+          </div>
+          <div class="container" data-aos="fade-up">
+            <div class="row">
+              <div class="col-md-12 text-center">
+                <div class="site-block-27">
+                  <ul>
+                    <li><a href="#" class="icon-keyboard_arrow_left"></a></li>
+                    <li class="active"><span>1</span></li>
+                    <li><a href="#">2</a></li>
+                    <li><a href="#">3</a></li>
+                    <li><a href="#">4</a></li>
+                    <li><a href="#">5</a></li>
+                    <li><a href="#" class="icon-keyboard_arrow_right"></a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- <div class="site-section">
       <div class="container" data-aos="fade-up">
@@ -400,8 +415,10 @@
         <div class="nonloop-block-13 owl-carousel">
 
           <div class="text-center p-3 p-md-5 bg-white">
-            <div class="mb-4">            
-              <img src="{{ asset('assets/images/person_1.jpg') }}") alt="Image" class="w-50 mx-auto img-fluid rounded-circle">
+
+            <div class="mb-4">
+
+              <img src="{{ asset('assets/images/person_1.jpg') }}" alt="Image" class="w-50 mx-auto img-fluid rounded-circle">
             </div>
             <div class="">
               <h3 class="font-weight-light h5">Megan Smith</h3>
@@ -410,7 +427,7 @@
           </div>
 
           <div class="text-center p-3 p-md-5 bg-white">
-            <div class="mb-4">            
+            <div class="mb-4">
               <img src="{{ asset('assets/images/person_2.jpg') }}" alt="Image" class="w-50 mx-auto img-fluid rounded-circle">
             </div>
             <div class="">
@@ -420,7 +437,7 @@
           </div>
 
           <div class="text-center p-3 p-md-5 bg-white">
-            <div class="mb-4">            
+            <div class="mb-4">
               <img src="{{ asset('assets/images/person_3.jpg') }}" alt="Image" class="w-50 mx-auto img-fluid rounded-circle">
             </div>
             <div class="">
@@ -430,7 +447,7 @@
           </div>
 
           <div class="text-center p-3 p-md-5 bg-white">
-            <div class="mb-4">            
+            <div class="mb-4">
               <img src="{{ asset('assets/images/person_4.jpg') }}" alt="Image" class="w-50 mx-auto img-fluid rounded-circle">
             </div>
             <div class="">
@@ -440,7 +457,7 @@
           </div>
 
           <div class="text-center p-3 p-md-5 bg-white">
-            <div class="mb-4">            
+            <div class="mb-4">
               <img src="{{ asset('assets/images/person_5.jpg') }}" alt="Image" class="w-50 mx-auto img-fluid rounded-circle">
             </div>
             <div class="">
@@ -450,7 +467,7 @@
           </div>
 
           <div class="text-center p-3 p-md-5 bg-white">
-            <div class="mb-4">            
+            <div class="mb-4">
               <img src="{{ asset('assets/images/person_6.jpg') }}" alt="Image" class="w-50 mx-auto img-fluid rounded-circle">
             </div>
             <div class="">
@@ -462,8 +479,8 @@
         </div>
       </div>
     </div>
-    
-    <div class="site-blocks-cover overlay inner-page-cover" style="background-image: url({{ asset('assets/images/hero_bg_1.jpg') }});" data-aos="fade" data-stellar-background-ratio="0.5">
+
+    <div class="site-blocks-cover overlay inner-page-cover" style="background-image: url('assets/images/hero_bg_1.jpg');" data-aos="fade" data-stellar-background-ratio="0.5">
       <div class="container">
         <div class="row align-items-center justify-content-center text-center">
 
@@ -481,7 +498,7 @@
           </div>
         </div>
       </div>
-    </div>  
+    </div>
 
 
     <footer class="site-footer">
@@ -515,11 +532,14 @@
           <div class="col-md-12">
             <p>
               <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-              Copyright &copy;<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="icon-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank" >Colorlib</a>
+              Copyright &copy;<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+              <script>
+                document.write(new Date().getFullYear());
+              </script> All rights reserved | This template is made with <i class="icon-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
               <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
             </p>
           </div>
-          
+
         </div>
       </div>
     </footer>
@@ -529,14 +549,16 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      var mediaElements = document.querySelectorAll('video, audio'), total = mediaElements.length;
+      var mediaElements = document.querySelectorAll('video, audio'),
+        total = mediaElements.length;
 
       for (var i = 0; i < total; i++) {
         new MediaElementPlayer(mediaElements[i], {
           pluginPath: 'https://cdn.jsdelivr.net/npm/mediaelement@4.2.7/build/',
           shimScriptAccess: 'always',
-          success: function () {
-            var target = document.body.querySelectorAll('.player'), targetTotal = target.length;
+          success: function() {
+            var target = document.body.querySelectorAll('.player'),
+              targetTotal = target.length;
             for (var j = 0; j < targetTotal; j++) {
               target[j].style.visibility = 'visible';
             }
@@ -550,4 +572,5 @@
   <script src="{{ asset('assets/js/main.js') }}"></script>
 
 </body>
+
 </html>

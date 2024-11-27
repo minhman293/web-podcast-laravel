@@ -68,8 +68,8 @@
       <div class="container">
         <div class="row align-items-center">
           <div class="col-12 text-center">
-            <a href="#">Mike Smith </a><span class="mx-2">&bullet;</span> Jun 25, 2020 <span class="mx-2">&bullet;</span> 1:30:20
-            <h1 class="mb-3">Tell Your Story to the World</h1>
+            <a href="#">{{ $podcast->author }}</a><span class="mx-2">&bullet;</span> {{ $podcast->date }} <span class="mx-2">&bullet;</span> {{ $podcast->duration }}
+            <h1 class="mb-3">{{ $podcast->title }}</h1>
           </div>
         </div>
       </div>
@@ -78,7 +78,7 @@
     <div class="container play-wrap">
       <div class="player mb-5">
         <audio id="player2" preload="none" controls style="max-width: 100%">
-          <source src="http://www.largesound.com/ashborytour/sound/AshboryBYU.mp3" type="audio/mp3">
+          <source src="{{ asset('storage/'.$podcast->audio) }}" type="audio/mp3">
           </audio>
         </div>
       </div>
