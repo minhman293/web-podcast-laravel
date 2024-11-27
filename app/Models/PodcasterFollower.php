@@ -4,12 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Database\Eloquent\SoftDeletes;
 class PodcasterFollower extends Model
 {
     use HasFactory;
-
+    use SoftDeletes;
     // protected $table = 'podcaster_followers';
+    protected $primaryKey = ['podcaster_id', 'follower_id'];
+    public $incrementing = false;
 
     protected $fillable = [
         'podcaster_id',

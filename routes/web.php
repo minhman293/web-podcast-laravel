@@ -1,9 +1,13 @@
 <?php
 
+
+use App\Http\Controllers\Podcaster\PodCasterController;
+
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
+
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\PodcastController;
@@ -23,6 +27,7 @@ use Illuminate\Support\Facades\Mail;
 |
 */
 
+
 Route::middleware(['web'])->group(function () {
     Route::get('/', function () {
         return view('index');
@@ -32,6 +37,7 @@ Route::middleware(['web'])->group(function () {
         return view('about');
     })->name('about')->middleware('verified');
 
+
     Route::get('/contact', function () {
         return view('contact');
     })->name('contact');
@@ -40,6 +46,16 @@ Route::middleware(['web'])->group(function () {
         Route::get('/{provider}/redirect', [AuthController::class, 'redirectSocial'])->name('social.redirect');
         Route::get('/{provider}/callback', [AuthController::class, 'callbackSocial'])->name('social.callback');
     });
+
+
+
+Route::group(['prefix' => 'podcasters', 'as' => 'podcasters.' ], function() {
+    Route::get('/edit/{podcaster}', [PodCasterController::class, 'edit'])->name('edit');
+    Route::put('/update/{podcaster}', [PodCasterController::class, 'update'])->name('update');
+    Route::get('/{podcaster}', [PodCasterController::class, 'index'])->name('index');
+  
+});
+
 
     Auth::routes(['verify' => true]);
 
@@ -71,3 +87,4 @@ Route::put('/crud/update/{id}', [PodcastController::class, 'updatePodcast'])->na
 
 Route::get('/crud', [PodcastController::class, 'index']) -> name('podcast.crud');
 Route::get('/podcast/{id}', [PodcastController::class, 'show']);
+
