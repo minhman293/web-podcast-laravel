@@ -31,7 +31,7 @@
 
 
           <div class="col-3">
-            <h1 class="site-logo"><a href="index.html" class="h2">Podcast<span class="text-primary">.</span> </a></h1>
+            <h1 class="site-logo"><a href="{{ url('/') }}" class="h2">Podcast<span class="text-primary">.</span> </a></h1>
           </div>
           <div class="col-9">
             <nav class="site-navigation position-relative text-right text-md-right" role="navigation">
@@ -42,7 +42,7 @@
 
               <ul class="site-menu js-clone-nav d-none d-lg-block">
                 <li class="active">
-                  <a href="#">Home</a>
+                  <a href="{{ url('/') }}">Home</a>
                 </li>
                 <li class="has-children">
                   <a href="#">Dropdown</a>
@@ -58,13 +58,20 @@
 
 
                 @auth
-                <li><a>Hello, {{ Auth::user()->name }}</a></li>
-                <li><a>
-                    <form method="POST" action="{{ route('logout') }}" class="logout-form">
-                      @csrf
-                      <button type="submit" class="logout-button">Logout</button>
-                    </form>
-                  </a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Hello, {{ Auth::user()->name }}
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="{{ route('podcasters.index', Auth::id()) }}">View profile</a>
+                        <a class="dropdown-item" href="{{ route('podcasters.edit', Auth::id()) }}">Update profile</a>
+                        <div class="dropdown-divider"></div>
+                        <form method="POST" action="{{ route('logout') }}" class="logout-form">
+                            @csrf
+                            <button type="submit" class="dropdown-item">Log out</button>
+                        </form>
+                    </div>
+                </li>
                 @else
                 <li><a href="{{ route('login') }}">Login</a></li>
                 @endauth
@@ -101,173 +108,65 @@
 
         <div class="row">
           <div class="col-lg-3">
-            <div class="featured-user  mb-5 mb-lg-0">
+          
+            <div class="featured-user mb-5 mb-lg-0">
               <h3 class="mb-4">Popular Podcaster</h3>
               <ul class="list-unstyled">
-                <li>
-                  <a href="#" class="d-flex align-items-center">
+                @foreach($podcasters as $podcaster)
+                  <li>
+                    <a href="#" class="d-flex align-items-center">
                     <img src="{{ asset('assets/images/person_1.jpg') }}" alt="Image" class="img-fluid mr-2">
-                    <div class="podcaster">
-                      <span class="d-block">Claire Stanford</span>
-                      <span class="small">32,420 podcasts</span>
-                    </div>
-                  </a>
-                </li>
-                <li>
-                  <a href="#" class="d-flex align-items-center">
-                    <img src="{{ asset('assets/images/person_2.jpg') }}" alt="Image" class="img-fluid mr-2">
-                    <div class="podcaster">
-                      <span class="d-block">Dianne Winston</span>
-                      <span class="small">12,381 podcasts</span>
-                    </div>
-                  </a>
-                </li>
-                <li>
-                  <a href="#" class="d-flex align-items-center">
-                    <img src="{{ asset('assets/images/person_3.jpg') }}" alt="Image" class="img-fluid mr-2">
-                    <div class="podcaster">
-                      <span class="d-block">Borris Larry</span>
-                      <span class="small">9,291 podcasts</span>
-                    </div>
-                  </a>
-                </li>
-                <li>
-                  <a href="#" class="d-flex align-items-center">
-                    <img src="{{ asset('assets/images/person_4.jpg') }}" alt="Image" class="img-fluid mr-2">
-                    <div class="podcaster">
-                      <span class="d-block">Garry Smith</span>
-                      <span class="small">3,291 podcasts</span>
-                    </div>
-                  </a>
-                </li>
-                <li>
-                  <a href="#" class="d-flex align-items-center">
-                    <img src="{{ asset('assets/images/person_5.jpg') }}" alt="Image" class="img-fluid mr-2">
-                    <div class="podcaster">
-                      <span class="d-block">Gerson Stack</span>
-                      <span class="small">1,092 podcasts</span>
-                    </div>
-                  </a>
-                </li>
-                <li>
-                  <a href="#" class="d-flex align-items-center">
-                    <img src="{{ asset('assets/images/person_6.jpg') }}" alt="Image" class="img-fluid mr-2">
-                    <div class="podcaster">
-                      <span class="d-block">Jenna Stone</span>
-                      <span class="small">911 podcasts</span>
-                    </div>
-                  </a>
-                </li>
+                      <div class="podcaster">
+                        <span class="d-block">{{ $podcaster->name }}</span>
+                        <span class="small">{{ number_format($podcaster->podcasts_count) }} podcasts</span>
+                      </div>
+                    </a>
+                  </li>
+                @endforeach
               </ul>
             </div>
+
           </div>
 
           <div class="col-lg-9">
 
-
-            <div class="d-block d-md-flex podcast-entry bg-white mb-5" data-aos="fade-up">
-              <div class="image" style="background-image: url('assets/images/img_1.jpg');"></div>
-              <div class="text">
-
-                <h3 class="font-weight-light"><a href="single-post.html">Episode 08: How To Create Web Page Using Bootstrap 4</a></h3>
-                <div class="text-white mb-3"><span class="text-black-opacity-05"><small>By Mike Smith <span class="sep">/</span> 16 September 2017 <span class="sep">/</span> 1:30:20</small></span></div>
-
-
-                <div class="player">
-                  <audio id="player2" preload="none" controls style="max-width: 100%">
-                    <source src="http://www.largesound.com/ashborytour/sound/AshboryBYU.mp3" type="audio/mp3">
-                  </audio>
-                </div>
-
+            <h3 class="mb-4">Featured Podcasts</h3>
+            @foreach($podcasts as $podcast)
+              <div class="d-block d-md-flex podcast-entry bg-white mb-5" data-aos="fade-up">
+                  <div class="image" style="background-image: url('{{ asset($podcast->image) }}');"></div>
+                  <div class="text">
+                  <h3 class="font-weight-light"><a href="{{ route('podcast.podcast_detail', ['category' => $podcast->category->name, 'id' => $podcast->id]) }}">{{ $podcast->title }}</a></h3>
+                      <div class="text-white mb-3">
+                          <span class="text-black-opacity-05">
+                              <small>By <a href="{{ route('podcasters.index', $podcast->podcaster->id) }}" class="podcaster-link">{{ $podcast->podcaster->name }}</a> <span class="sep">/</span> {{ $podcast->created_at->format('d M Y') }} <span class="sep">/</span> {{ gmdate('H:i:s', $podcast->duration) }}</small>
+                          </span>
+                      </div>
+                      <div class="player">
+                          <audio id="player2" preload="none" controls style="max-width: 100%">
+                              <source src="{{ asset($podcast->audio) }}" type="audio/mp3">
+                          </audio>
+                      </div>
+                  </div>
               </div>
-            </div>
+          @endforeach
 
-
-            <div class="d-block d-md-flex podcast-entry bg-white mb-5" data-aos="fade-up">
-              <div class="image" style="background-image: url('assets/images/img_2.jpg');"></div>
-              <div class="text">
-
-                <h3 class="font-weight-light"><a href="single-post.html">Episode 07: How To Create Web Page Using Bootstrap 4</a></h3>
-                <div class="text-white mb-3"><span class="text-black-opacity-05"><small>By Mike Smith <span class="sep">/</span> 16 September 2017 <span class="sep">/</span> 1:30:20</small></span></div>
-
-                <div class="player">
-                  <audio id="player2" preload="none" controls style="max-width: 100%">
-                    <source src="http://www.largesound.com/ashborytour/sound/AshboryBYU.mp3" type="audio/mp3">
-                  </audio>
-                </div>
-
-              </div>
-            </div>
-
-
-            <div class="d-block d-md-flex podcast-entry bg-white mb-5" data-aos="fade-up">
-              <div class="image" style="background-image: url('assets/images/img_3.jpg');"></div>
-              <div class="text">
-
-                <h3 class="font-weight-light"><a href="single-post.html">Episode 06: How To Create Web Page Using Bootstrap 4</a></h3>
-                <div class="text-white mb-3"><span class="text-black-opacity-05"><small>By Mike Smith <span class="sep">/</span> 16 September 2017 <span class="sep">/</span> 1:30:20</small></span></div>
-
-
-                <div class="player">
-                  <audio id="player2" preload="none" controls style="max-width: 100%">
-                    <source src="http://www.largesound.com/ashborytour/sound/AshboryBYU.mp3" type="audio/mp3">
-                  </audio>
-                </div>
-              </div>
-            </div>
-
-
-            <div class="d-block d-md-flex podcast-entry bg-white mb-5" data-aos="fade-up">
-              <div class="image" style="background-image: url('assets/images/img_4.jpg');"></div>
-              <div class="text">
-
-                <h3 class="font-weight-light"><a href="single-post.html">Episode 05: How To Create Web Page Using Bootstrap 4</a></h3>
-                <div class="text-white mb-3"><span class="text-black-opacity-05"><small>By Mike Smith <span class="sep">/</span> 16 September 2017 <span class="sep">/</span> 1:30:20</small></span></div>
-
-
-                <div class="player">
-                  <audio id="player2" preload="none" controls style="max-width: 100%">
-                    <source src="http://www.largesound.com/ashborytour/sound/AshboryBYU.mp3" type="audio/mp3">
-                  </audio>
-                </div>
-              </div>
-            </div>
-
-
-            <div class="d-block d-md-flex podcast-entry bg-white mb-5" data-aos="fade-up">
-              <div class="image" style="background-image: url(assets/images/img_5.jpg);"></div>
-              <div class="text">
-
-                <h3 class="font-weight-light"><a href="single-post.html">Episode 04: How To Create Web Page Using Bootstrap 4</a></h3>
-                <div class="text-white mb-3"><span class="text-black-opacity-05"><small>By Mike Smith <span class="sep">/</span> 16 September 2017 <span class="sep">/</span> 1:30:20</small></span></div>
-
-
-                <div class="player">
-                  <audio id="player2" preload="none" controls style="max-width: 100%">
-                    <source src="http://www.largesound.com/ashborytour/sound/AshboryBYU.mp3" type="audio/mp3">
-                  </audio>
-                </div>
-              </div>
-            </div>
-
-
-          </div>
+          <!-- Pagination (nếu cần) -->
           <div class="container" data-aos="fade-up">
-            <div class="row">
-              <div class="col-md-12 text-center">
-                <div class="site-block-27">
-                  <ul>
-                    <li><a href="#" class="icon-keyboard_arrow_left"></a></li>
-                    <li class="active"><span>1</span></li>
-                    <li><a href="#">2</a></li>
-                    <li><a href="#">3</a></li>
-                    <li><a href="#">4</a></li>
-                    <li><a href="#">5</a></li>
-                    <li><a href="#" class="icon-keyboard_arrow_right"></a></li>
-                  </ul>
-                </div>
+              <div class="row">
+                  <div class="col-md-12 text-center">
+                      <div class="site-block-27">
+                          <ul>
+                              <li><a href="#" class="icon-keyboard_arrow_left"></a></li>
+                              <li class="active"><span>1</span></li>
+                              <li><a href="#">2</a></li>
+                              <li><a href="#">3</a></li>
+                              <li><a href="#">4</a></li>
+                              <li><a href="#">5</a></li>
+                              <li><a href="#" class="icon-keyboard_arrow_right"></a></li>
+                          </ul>
+                      </div>
+                  </div>
               </div>
-            </div>
           </div>
         </div>
       </div>

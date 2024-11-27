@@ -18,12 +18,12 @@
             <div class="container">
                 <div class="row align-items-center">
                     <div class="col-3">
-                        <h1 class="site-logo"><a href="{{ route('index') }}" class="h2">Podcast<span class="text-primary">.</span> </a></h1>
+                        <h1 class="site-logo"><a href="{{ url('/') }}" class="h2">Podcast<span class="text-primary">.</span> </a></h1>
                     </div>
                     <div class="col-9">
                         <nav class="site-navigation position-relative text-right text-md-right" role="navigation">
                             <ul class="site-menu js-clone-nav d-none d-lg-block">
-                                <li><a href="{{ route('index') }}">Home</a></li>
+                                <li><a href="{{ url('/') }}">Home</a></li>
                                 <li><a href="{{ route('about') }}">About</a></li>
                                 <li><a href="{{ route('contact') }}">Contact</a></li>
                                 <li class="active"><a href="{{ route('get_login') }}">Login</a></li>
