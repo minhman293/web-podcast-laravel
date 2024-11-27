@@ -11,6 +11,8 @@ class PodcasterFollower extends Model
     use HasFactory, SoftDeletes;
 
     // protected $table = 'podcaster_followers';
+    protected $primaryKey = ['podcaster_id', 'follower_id'];
+    public $incrementing = false;
 
     protected $fillable = [
         'podcaster_id',

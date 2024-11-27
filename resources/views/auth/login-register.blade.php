@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <title>Podcast &mdash; Colorlib Website Template</title>
   <meta charset="utf-8">
@@ -11,7 +10,6 @@
 </head>
 
 <body>
-
   <div class="site-wrap">
 
     <div class="site-mobile-menu">
@@ -124,6 +122,10 @@
           </div>
           <div class="col-md-5 mb-5">
             <h3 class="mb-5">Login</h3>
+            <a href="{{ route('auth.social.redirect', ['provider' => 'google']) }}" class="google_login_btn">
+                <img src="{{ asset('/assets/images/google_icon.png') }}" width="30px"> 
+                Login with Google 
+            </a>
             <form action="#" method="post" class="bg-white">
 
               <div class="">

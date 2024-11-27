@@ -14,7 +14,6 @@
 
 <link rel="stylesheet" href="{{asset('assets/css/style.css')}}">
 
-
 <style>
     .podcaster-link {
         color: inherit; /* Giữ nguyên màu chữ hiện tại */
@@ -25,3 +24,6 @@
         color: red; /* Màu chữ khi hover */
     }
 </style>
+
+<link rel="stylesheet" href="{{asset('assets/css/custom.css')}}">
+
