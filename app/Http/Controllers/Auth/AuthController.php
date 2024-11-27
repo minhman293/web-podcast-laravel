@@ -28,14 +28,14 @@ class AuthController extends Controller
     }
 
     public function login(LoginRequest $loginRequest)
-    {        
+    {
         $validLogin = $loginRequest->validated();
 
         $loginResult = $this->authService->login($validLogin);
 
         if($loginResult['status']) {
             Auth::loginUsingId($loginResult['podcaster']->id);
-            return redirect()->route('index')->with('success', 'login successfully');
+            return redirect('/')->with('success', 'login successfully');
         }
 
         return redirect()->route('get_login')->with('error', 'login failed');

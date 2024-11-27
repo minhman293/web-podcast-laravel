@@ -15,6 +15,10 @@ use App\Http\Controllers\PodcastController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 
+use App\Http\Controllers\Podcast\PodcastController;
+use App\Http\Controllers\Comment\CommentController;
+use App\Http\Controllers\PodcasterFollower\PodcasterFollowerController;
+use App\Http\Controllers\Podcaster\PodcasterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,11 +31,8 @@ use Illuminate\Support\Facades\Mail;
 |
 */
 
-
-Route::middleware(['web'])->group(function () {
-    Route::get('/', function () {
-        return view('index');
-    })->name('index');
+Route::middleware(['web'])->group(function(){
+    Route::get('/', [PodcastController::class, 'index'])->name('index');
 
     Route::get('/about', function () {
         return view('about');
@@ -74,8 +75,24 @@ Route::group(['prefix' => 'podcasters', 'as' => 'podcasters.' ], function() {
     Route::get('password/reset/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
     Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
 
-    Route::get('/podcast/{id}', function () {
-        return view('podcast.single-podcast');
+    // Route::get('/podcast/{id}', function () {
+    //     return view('podcast.single-podcast');
+    // });
+    Route::get('/{category}/podcast/{id}', [PodcastController::class, 'podcast_detail'])->name('podcast.podcast_detail');
+
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
+        Route::put('/comments/{id}', [CommentController::class, 'update'])->name('comments.update');
+        Route::delete('/comments/{id}', [CommentController::class, 'destroy'])->name('comments.destroy');
+    });
+
+    Route::post('/follow', [PodcasterFollowerController::class, 'follow'])->name('follow');
+    Route::post('/unfollow', [PodcasterFollowerController::class, 'unfollow'])->name('unfollow');
+
+    Route::group(['prefix' => 'podcasters', 'as' => 'podcasters.' ], function() {
+        Route::get('/edit/{podcaster}', [PodcasterController::class, 'edit'])->name('edit');
+        Route::put('/update/{podcaster}', [PodCasterController::class, 'update'])->name('update');
+        Route::get('/{podcaster}', [PodCasterController::class, 'index'])->name('index');
     });
 Route::get('/crud/add',[PodcastController::class, 'loadAddPage'])->name('podcast.loadAddPage');
 Route::post('/crud/add',[PodcastController::class, 'addPodcast'])->name('podcast.addPodcast');
@@ -88,3 +105,6 @@ Route::put('/crud/update/{id}', [PodcastController::class, 'updatePodcast'])->na
 Route::get('/crud', [PodcastController::class, 'index']) -> name('podcast.crud');
 Route::get('/podcast/{id}', [PodcastController::class, 'show']);
 
+    Route::post('/podcasters/{podcaster}/subscribe', [PodCasterFollowerController::class, 'subscribe'])->name('podcasters.subscribe');
+    Route::post('/podcasters/{podcaster}/unsubscribe', [PodCasterFollowerController::class, 'unsubscribe'])->name('podcasters.unsubscribe');
+});

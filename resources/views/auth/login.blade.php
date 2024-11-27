@@ -29,7 +29,7 @@
                 <div class="row align-items-center">
 
                     <div class="col-3">
-                        <h1 class="site-logo"><a href="index.html" class="h2">Podcast<span class="text-primary">.</span> </a></h1>
+                        <h1 class="site-logo"><a href="{{ url('/') }}" class="h2">Podcast<span class="text-primary">.</span> </a></h1>
                     </div>
                     <div class="col-9">
                         <nav class="site-navigation position-relative text-right text-md-right" role="navigation">
@@ -38,7 +38,7 @@
 
                             <ul class="site-menu js-clone-nav d-none d-lg-block">
                                 <li>
-                                    <a href="{{ route('index') }}">Home</a>
+                                    <a href="{{ url('/') }}">Home</a>
                                 </li>
                                 <li class="has-children">
                                     <a href="#">Dropdown</a>
@@ -50,7 +50,7 @@
                                 </li>
                                 <li><a href="{{ route('about') }}">About</a></li>
                                 <li><a href="{{ route('contact') }}">Contact</a></li>
-                                <li class="active"><a href="#">Login</a></li>
+                                <li class="active"><a href="{{ route('register') }}">Register</a></li>
                             </ul>
                         </nav>
 
