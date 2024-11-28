@@ -39,8 +39,8 @@
               <div class="d-block d-lg-none ml-md-0 mr-auto"><a href="#" class="site-menu-toggle js-menu-toggle text-black"><span class="icon-menu h3"></span></a></div>
 
               <ul class="site-menu js-clone-nav d-none d-lg-block">
-                <li class="active">
-                  <a href="index.html">Home</a>
+                <li >
+                  <a href="{{ route('index') }}">Home</a>
                 </li>
                 <li class="has-children">
                   <a href="#">Dropdown</a>
@@ -50,9 +50,19 @@
                     <li><a href="#">Menu Three</a></li>
                   </ul>
                 </li>
-                <li><a href="about.html">About</a></li>
-                <li><a href="contact.html">Contact</a></li>
-                <li><a href="login-register.html">Login / Register</a></li>
+                <li><a href="{{ route('about') }}">About</a></li>
+                <li><a href="{{ route('contact') }}">Contact</a></li>
+                @auth
+                <li class="active"><a>Hello, {{ Auth::user()->name }}</a></li>
+                <li><a>
+                    <form method="POST" action="{{ route('logout') }}" class="logout-form">
+                      @csrf
+                      <button type="submit" class="logout-button">Logout</button>
+                    </form>
+                  </a></li>
+                @else
+                <li><a href="{{ route('login') }}">Login</a></li>
+                @endauth
               </ul>
             </nav>
 
@@ -82,7 +92,7 @@
           </div>
         </div>
         <div class="col-lg-6">
-          <img src="{{ asset('assets/images/1x/user_img.jpg') }}" alt="Image" class="img-fluid">    
+          <img src="{{ asset('assets/images/1x/asset-1.png') }}" alt="Image" class="img-fluid">       
         </div>
       </div>
     </div>
