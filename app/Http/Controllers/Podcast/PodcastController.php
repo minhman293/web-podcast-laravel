@@ -3,11 +3,15 @@
 namespace App\Http\Controllers\Podcast;
 
 use App\Http\Controllers\Controller;
+
 use Illuminate\Support\Facades\Auth;
+
 use App\Models\Podcast;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Podcaster;
+
 use App\Routes;
 
 class PodcastController extends Controller
@@ -18,6 +22,7 @@ class PodcastController extends Controller
             $search = $request->input('search');
             $query = Podcast::query();
             $showDeleted = $request->input('show_deleted', false);
+
     
             // Get current podcaster's id
             $podcasterId = Auth::id();
@@ -35,7 +40,7 @@ class PodcastController extends Controller
                       ->orWhere('description', 'LIKE', '%'.$search.'%');
                 });
             }
-    
+
             // Get paginated results
             $podcasts = $query->orderBy('created_at', 'desc')
                              ->paginate(5)
@@ -54,7 +59,9 @@ class PodcastController extends Controller
             return back()->with('error', 'An error occurred while searching podcasts');
         }
     }
+
 public function restore($id)
+
     {
         try {
             $podcast = Podcast::withTrashed()->findOrFail($id);
@@ -157,6 +164,7 @@ public function restore($id)
             return back()->with('error', 'Error uploading podcast: ' . $e->getMessage())->withInput();
         }
     }
+
 
     public function deletePodcast($id)
     {
@@ -263,5 +271,23 @@ public function restore($id)
             \Log::error('Podcast update error: ' . $e->getMessage());
             return back()->with('error', 'Error updating podcast: ' . $e->getMessage())->withInput();
         }
+    }
+
+    public function podcast_detail($category, $id) {
+        // Lấy podcast đang được hiển thị
+        $podcast = Podcast::with(['podcaster', 'comments', 'category'])->findOrFail($id);
+    
+        // Kiểm tra xem category có khớp với category của podcast hay không
+        if ($podcast->category->name !== $category) {
+            abort(404);
+        }
+    
+        // Lấy danh sách podcaster và số podcast của mỗi podcaster
+        $podcasters = Podcaster::withCount('podcasts')->get();
+    
+        // Lấy danh sách các podcast còn lại ngoài podcast đang được hiển thị
+        $otherPodcasts = Podcast::where('id', '!=', $id)->get();
+    
+        return view('/podcast/single-podcast', compact('podcast', 'podcasters', 'otherPodcasts'));
     }
 }

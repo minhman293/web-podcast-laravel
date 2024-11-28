@@ -29,7 +29,7 @@
 
 
           <div class="col-3">
-            <h1 class="site-logo"><a href="index.html" class="h2">Podcast<span class="text-primary">.</span> </a></h1>
+            <h1 class="site-logo"><a href="{{ url('/') }}" class="h2">Podcast<span class="text-primary">.</span> </a></h1>
           </div>
           <div class="col-9">
             <nav class="site-navigation position-relative text-right text-md-right" role="navigation">
@@ -39,8 +39,8 @@
               <div class="d-block d-lg-none ml-md-0 mr-auto"><a href="#" class="site-menu-toggle js-menu-toggle text-black"><span class="icon-menu h3"></span></a></div>
 
               <ul class="site-menu js-clone-nav d-none d-lg-block">
-                <li class="has-children">
-                  <a href="index.html">Home</a>
+                <li class="active">
+                  <a href="{{ url('/') }}">Home</a>
                 </li>
                 <li class="has-children">
                   <a href="#">Dropdown</a>
@@ -50,9 +50,28 @@
                     <li><a href="#">Menu Three</a></li>
                   </ul>
                 </li>
-                <li><a href="about.html">About</a></li>
-                <li><a href="contact.html">Contact</a></li>
-                <li><a href="login-register.html">Login / Register</a></li>
+                <li><a href="{{ route('about') }}">About</a></li>
+                <li><a href="{{ route('contact') }}">Contact</a></li>
+
+                @auth
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Hello, {{ Auth::user()->name }}
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="{{ route('podcasters.index', Auth::id()) }}">View profile</a>
+                        <a class="dropdown-item" href="{{ route('podcasters.edit', Auth::id()) }}">Update profile</a>
+                        <div class="dropdown-divider"></div>
+                        <form method="POST" action="{{ route('logout') }}" class="logout-form">
+                            @csrf
+                            <button type="submit" class="dropdown-item">Log out</button>
+                        </form>
+                    </div>
+                </li>
+                @else
+                <li><a href="{{ route('login') }}">Login</a></li>
+                @endauth
+
               </ul>
             </nav>
 
@@ -64,313 +83,290 @@
       
     </header>
 
-    <div class="site-blocks-cover inner-page-cover bg-light mb-5">
+    <div class="container pt-5 hero">
+      <div class="row align-items-center text-center text-md-left">
+        
+        <div class="col-lg-4">
+          <h3 class="mb-4">{{ $podcast->title }}</h3>
+          <p>By <a href="{{ route('podcasters.index', $podcast->podcaster->id) }}" class="podcaster-link">{{ $podcast->podcaster->name }}</a> / {{ $podcast->created_at->format('d M Y') }} / {{ gmdate('H:i:s', $podcast->duration) }}</p>
+          <input type="submit" style="margin-bottom: 20px" class="btn-category" value="{{ $podcast->category->name }}">
+          <div class="player">
+            <audio id="player2" preload="none" controls style="max-width: 100%">
+              <source src="{{ asset($podcast->audio) }}" type="audio/mp3">
+            </audio>
+          </div>
+          @if(Auth::check())
+              @php
+                $isFollowing = \App\Models\PodcasterFollower::where('podcaster_id', $podcast->podcaster->id)
+                                                            ->where('follower_id', Auth::id())
+                                                            ->exists();
+              @endphp
+              <button id="follow-btn" class="btn btn-primary" style="margin-top: 20px; margin-bottom: 20px;">
+                {{ $isFollowing ? 'UnFollow' : 'Follow' }}
+              </button>
+          @endif
+        </div>
+        <div class="col-lg-8">
+          <img src="{{ asset($podcast->image) }}" alt="Image" class="img-fluid"> 
+        </div>
+        
+        
+      </div>
+    </div>
+
+    <div class="container pt-5 hero">
+        <div class="comment-section">
+          <h2>Comments</h2>
+          <!-- Comment List -->
+          <div class="comments">
+            @foreach($podcast->comments as $comment)
+                <div class="comment" data-id="{{ $comment->id }}">
+                    <div class="comment-header">
+                        <span class="comment-author">{{ $comment->podcaster->name }}</span>
+                        <span class="comment-time">{{ $comment->created_at->diffForHumans() }}</span>
+                    </div>
+                    <p class="comment-content">{{ $comment->content }}</p>
+                    @if(Auth::id() == $comment->podcaster_id)
+                      <div class="comment-actions">
+                        <button class="edit-btn">Edit</button>
+                        <form action="{{ route('comments.destroy', $comment->id) }}" method="POST" style="display: inline;">
+                          @csrf
+                          @method('DELETE')
+                          <button type="submit" class="delete-btn">Delete</button>
+                        </form>
+                      </div>
+                    @endif
+                </div>
+            @endforeach
+          </div>
+
+          <!-- Comment Input -->
+          @if(Auth::check())
+            <div class="comment-input">
+              <form action="{{ route('comments.store') }}" method="POST">
+                @csrf
+                <input type="hidden" name="podcast_id" value="{{ $podcast->id }}">
+                <textarea name="content" placeholder="Write a comment..." rows="5"></textarea>
+                <button type="submit">Send</button>
+              </form>
+            </div>
+          @endif
+        </div>
+
+    </div>
+    
+
+    <div class="site-section">
       <div class="container">
-        <div class="row align-items-center">
-          <div class="col-12 text-center">
-            <a href="#">{{ $podcast->author }}</a><span class="mx-2">&bullet;</span> {{ $podcast->date }} <span class="mx-2">&bullet;</span> {{ $podcast->duration }}
-            <h1 class="mb-3">{{ $podcast->title }}</h1>
+
+        <div class="row">
+          <div class="col-lg-3">
+          
+            <div class="featured-user mb-5 mb-lg-0">
+              <h3 class="mb-4">Popular Podcaster</h3>
+              <ul class="list-unstyled">
+                @foreach($podcasters as $podcaster)
+                  <li>
+                    <a href="#" class="d-flex align-items-center">
+                    <img src="{{ asset('assets/images/person_1.jpg') }}" alt="Image" class="img-fluid mr-2">
+                      <div class="podcaster">
+                        <span class="d-block">{{ $podcaster->name }}</span>
+                        <span class="small">{{ number_format($podcaster->podcasts_count) }} podcasts</span>
+                      </div>
+                    </a>
+                  </li>
+                @endforeach
+              </ul>
+            </div>
+
+          </div>
+
+          <div class="col-lg-9">
+
+            <h3 class="mb-4">Other Podcasts</h3>
+            @foreach($otherPodcasts as $otherPodcast)
+              <div class="d-block d-md-flex podcast-entry bg-white mb-5" data-aos="fade-up">
+                  <div class="image" style="background-image: url('{{ asset($otherPodcast->image) }}');"></div>
+                  <div class="text">
+                  <h3 class="font-weight-light"><a href="{{ route('podcast.podcast_detail', ['category' => $otherPodcast->category->name, 'id' => $otherPodcast->id]) }}">{{ $otherPodcast->title }}</a></h3>
+                      <div class="text-white mb-3">
+                          <span class="text-black-opacity-05">
+                              <small>By <a href="{{ route('podcasters.index', $otherPodcast->podcaster->id) }}" class="podcaster-link">{{ $otherPodcast->podcaster->name }}</a> <span class="sep">/</span> {{ $otherPodcast->created_at->format('d M Y') }} <span class="sep">/</span> {{ gmdate('H:i:s', $otherPodcast->duration) }}</small>
+                          </span>
+                      </div>
+                      <div class="player">
+                          <audio id="player2" preload="none" controls style="max-width: 100%">
+                              <source src="{{ asset($otherPodcast->audio) }}" type="audio/mp3">
+                          </audio>
+                      </div>
+                  </div>
+              </div>
+          @endforeach
+
+          <!-- Pagination (nếu cần) -->
+          <div class="container" data-aos="fade-up">
+              <div class="row">
+                  <div class="col-md-12 text-center">
+                      <div class="site-block-27">
+                          <ul>
+                              <li><a href="#" class="icon-keyboard_arrow_left"></a></li>
+                              <li class="active"><span>1</span></li>
+                              <li><a href="#">2</a></li>
+                              <li><a href="#">3</a></li>
+                              <li><a href="#">4</a></li>
+                              <li><a href="#">5</a></li>
+                              <li><a href="#" class="icon-keyboard_arrow_right"></a></li>
+                          </ul>
+                      </div>
+                  </div>
+              </div>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="container play-wrap">
-      <div class="player mb-5">
-        <audio id="player2" preload="none" controls style="max-width: 100%">
-          <source src="{{ asset('storage/'.$podcast->audio) }}" type="audio/mp3">
-          </audio>
-        </div>
-      </div>
-
+    <div class="site-section bg-light block-13">
       <div class="container">
-        <div class="row justify-content-between">
-          <div class="col-lg-3 ml-auto">
-            <div class="featured-user  mb-5 mb-lg-0">
-              <h3 class="mb-4">Popular Podcaster</h3>
-              <ul class="list-unstyled">
-                <li>
-                  <a href="#" class="d-flex align-items-center">
-                    <img src="{{ asset('assets/images/person_1.jpg') }}" alt="Image" class="img-fluid mr-2">
-                    <div class="podcaster">
-                      <span class="d-block">Claire Stanford</span>
-                      <span class="small">32,420 podcasts</span>
-                    </div>
-                  </a>
-                </li>
-                <li>
-                  <a href="#" class="d-flex align-items-center">
-                    <img src="{{ asset('assets/images/person_2.jpg') }}" alt="Image" class="img-fluid mr-2">
-                    <div class="podcaster">
-                      <span class="d-block">Dianne Winston</span>
-                      <span class="small">12,381 podcasts</span>
-                    </div>
-                  </a>
-                </li>
-                <li>
-                  <a href="#" class="d-flex align-items-center">
-                    <img src="{{ asset('assets/images/person_3.jpg') }}" alt="Image" class="img-fluid mr-2">
-                    <div class="podcaster">
-                      <span class="d-block">Borris Larry</span>
-                      <span class="small">9,291 podcasts</span>
-                    </div>
-                  </a>
-                </li>
-                <li>
-                  <a href="#" class="d-flex align-items-center">
-                    <img src="{{ asset('assets/images/person_4.jpg') }}" alt="Image" class="img-fluid mr-2">
-                    <div class="podcaster">
-                      <span class="d-block">Garry Smith</span>
-                      <span class="small">3,291 podcasts</span>
-                    </div>
-                  </a>
-                </li>
-                <li>
-                  <a href="#" class="d-flex align-items-center">
-                    <img src="{{ asset('assets/images/person_5.jpg') }}" alt="Image" class="img-fluid mr-2">
-                    <div class="podcaster">
-                      <span class="d-block">Gerson Stack</span>
-                      <span class="small">1,092 podcasts</span>
-                    </div>
-                  </a>
-                </li>
-                <li>
-                  <a href="#" class="d-flex align-items-center">
-                    <img src="{{ asset('assets/images/person_6.jpg') }}" alt="Image" class="img-fluid mr-2">
-                    <div class="podcaster">
-                      <span class="d-block">Jenna Stone</span>
-                      <span class="small">911 podcasts</span>
-                    </div>
-                  </a>
-                </li>
-              </ul>
-            </div>
+        <div class="row mb-5">
+          <div class="col-md-12 text-center">
+            <h2 class="font-weight-bold text-black">Related Guests</h2>
           </div>
-          <div class="col-md-7 pb-5 mr-auto">
-            <p><strong class="font-weight-bold font-weight-bold">Matt:</strong> Lorem ipsum dolor sit amet, consectetur adipisicing elit. Unde labore fugit earum beatae, qui autem asperiores harum quibusdam nulla in suscipit iure consequatur, laborum, inventore libero odit rem, dolore. Itaque?</p>
-            <p><strong class="font-weight-bold font-weight-bold">John:</strong> Ea ipsum, libero exercitationem, quisquam magnam blanditiis facere sapiente sequi esse totam quaerat obcaecati ab ratione ex dignissimos quae ullam dolore veniam minima! Et accusamus distinctio ipsa. Hic, repellat blanditiis!</p>
-            <p><strong class="font-weight-bold font-weight-bold">John:</strong> Exactly!</p>
-            <p><strong class="font-weight-bold font-weight-bold">Matt:</strong> Nisi hic non odio repellendus quia saepe, aliquid, deleniti. Quas neque dolorum, aspernatur excepturi sapiente maxime cumque rerum veniam doloribus qui ad deserunt non nulla, iure incidunt sint sequi nesciunt.</p>
-            <p><strong class="font-weight-bold font-weight-bold">John:</strong> Maiores incidunt non esse doloremque. Ullam quidem aut aspernatur dolorem expedita, repellendus recusandae incidunt, laboriosam quaerat delectus dolorum minima doloribus ipsa facilis consequatur doloremque vero animi numquam, dolor illo! Facilis.</p>
-            <p><strong class="font-weight-bold font-weight-bold">Matt:</strong> Sit reprehenderit dolor expedita non temporibus veritatis, saepe odio obcaecati culpa reiciendis, similique eos hic iure, odit ut iusto magnam quo praesentium. Eos dolores reprehenderit eaque consectetur sequi dolore quis?</p>
-            <p><strong class="font-weight-bold font-weight-bold">John:</strong> Sequi amet itaque molestiae, odio nihil nemo aspernatur reiciendis veritatis, quis obcaecati deserunt minima natus. Odit, dolorem quisquam perferendis reprehenderit, cupiditate eos quaerat assumenda voluptates a debitis fugiat tempora, voluptatem.</p>
-            <p><strong class="font-weight-bold font-weight-bold">Matt:</strong> Necessitatibus veritatis natus facere sit tempore odit reiciendis magni non aliquam cupiditate est dicta impedit quam quos quae vero sed recusandae consectetur, eum praesentium itaque voluptas, reprehenderit ducimus assumenda. Doloribus.</p>
-            <p><strong class="font-weight-bold font-weight-bold">John:</strong> Neque aliquam, debitis quas repellat totam deleniti tempora cum temporibus? Dignissimos numquam, magnam fugiat odit, fugit exercitationem saepe dolores ipsum. Similique numquam sequi nulla hic fugiat maiores, commodi aperiam dolorum.</p>
-            <p><strong class="font-weight-bold font-weight-bold">Matt:</strong> Impedit, inventore, nesciunt? In laboriosam optio mollitia dolores temporibus deserunt, enim assumenda facilis quas blanditiis qui omnis unde nam nostrum dolorum totam repellendus saepe quidem ad aperiam delectus. Cum, aspernatur!</p>
-            <p><strong class="font-weight-bold font-weight-bold">John:</strong> Temporibus molestias in quae quasi officia quis obcaecati dolorem earum dignissimos voluptatum sunt aliquam laborum nesciunt deserunt beatae, ex possimus unde provident voluptates labore, exercitationem eius quisquam perspiciatis! Similique, facilis.</p>
+        </div>
+        <div class="nonloop-block-13 owl-carousel">
+          @foreach($podcasters as $podcaster)
+            <div class="text-center p-3 p-md-5 bg-white">            
+              <div class="mb-4">            
+                <img src="{{ asset('assets/images/person_1.jpg') }}" alt="Image" class="w-50 mx-auto img-fluid rounded-circle">
+              </div>
+              <div class="">
+                <h3 class="font-weight-light h5">{{ $podcaster->name }}</h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Et, iusto. Aliquam illo, cum sed ea? Ducimus quos, ea?</p>
+              </div>
+            </div>
+          @endforeach 
+        </div>
+      </div>
+    </div>
+    
+    <div class="site-blocks-cover overlay inner-page-cover" style="background-image: url({{ asset('assets/images/hero_bg_1.jpg') }});" data-aos="fade" data-stellar-background-ratio="0.5">
+      <div class="container">
+        <div class="row align-items-center justify-content-center text-center">
+
+          <div class="col-md-6" data-aos="fade-up" data-aos-delay="400">
+            <h2>Subscribe</h2>
+            <p class="mb-5">Lorem ipsum dolor sit amet, consectetur adipisicing elit nihil saepe libero sit odio obcaecati veniam.</p>
+            <form action="#" method="post" class="site-block-subscribe">
+              <div class="input-group mb-3">
+                <input type="text" class="form-control border-secondary text-white bg-transparent" placeholder="Enter Email" aria-label="Enter Email" aria-describedby="button-addon2">
+                <div class="input-group-append">
+                  <button class="btn btn-primary" type="button" id="button-addon2">Send</button>
+                </div>
+              </div>
+            </form>
           </div>
         </div>
       </div>
+    </div>  
 
-      <div class="site-section bg-light">
-        <div class="container">
-          <div class="row mb-5">
-            <div class="col-md-12 text-center">
-              <h2 class="font-weight-bold text-black">Related Podcasts</h2>
-            </div>
+
+    <footer class="site-footer">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-4">
+            <h3>About Us</h3>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Praesentium animi, odio beatae aspernatur natus recusandae quasi magni eum voluptatem nam!</p>
           </div>
-          <div class="row">
-            <div class="col-md-6">
-              <div class="d-block podcast-entry bg-white mb-5" data-aos="fade-up">
-                <div class="image w-100" style="height: 300px; background-image: url({{ asset('assets/images/img_2.jpg') }});"></div>
-                <div class="text w-100">
-
-                  <h3 class="font-weight-light"><a href="single-post.html">Episode 07: How To Create Web Page Using Bootstrap 4</a></h3>
-                  <div class="text-white mb-3"><span class="text-black-opacity-05"><small>By Mike Smith <span class="sep">/</span> 16 September 2017 <span class="sep">/</span> 1:30:20</small></span></div>
-                  <p class="mb-4">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corrupti repellat mollitia consequatur, optio nesciunt placeat. Iste voluptates excepturi tenetur, nesciunt.</p>
-
-
-                  <div class="player">
-                    <audio id="player2" preload="none" controls style="max-width: 100%">
-                      <source src="http://www.largesound.com/ashborytour/sound/AshboryBYU.mp3" type="audio/mp3">
-                      </audio>
-                    </div>
-
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="d-block podcast-entry bg-white mb-5" data-aos="fade-up">
-                  <div class="image w-100" style="height: 300px; background-image: url({{ asset('assets/images/img_3.jpg') }});"></div>
-                  <div class="text w-100">
-
-                    <h3 class="font-weight-light"><a href="single-post.html">Episode 07: How To Create Web Page Using Bootstrap 4</a></h3>
-                    <div class="text-white mb-3"><span class="text-black-opacity-05"><small>By Mike Smith <span class="sep">/</span> 16 September 2017 <span class="sep">/</span> 1:30:20</small></span></div>
-                    <p class="mb-4">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Corrupti repellat mollitia consequatur, optio nesciunt placeat. Iste voluptates excepturi tenetur, nesciunt.</p>
-
-
-                    <div class="player">
-                      <audio id="player2" preload="none" controls style="max-width: 100%">
-                        <source src="http://www.largesound.com/ashborytour/sound/AshboryBYU.mp3" type="audio/mp3">
-                        </audio>
-                      </div>
-
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+          <div class="col-lg-3 mx-auto">
+            <h3>Navigation</h3>
+            <ul class="list-unstyled">
+              <li><a href="#">Podcasts</a></li>
+              <li><a href="#">Services</a></li>
+              <li><a href="#">About Us</a></li>
+              <li><a href="#">Blog</a></li>
+              <li><a href="#">Contact</a></li>
+            </ul>
           </div>
-
-
-
-          <div class="site-section bg-light block-13">
-            <div class="container">
-              <div class="row mb-5">
-                <div class="col-md-12 text-center">
-                  <h2 class="font-weight-bold text-black">Featured Guests</h2>
-                </div>
-              </div>
-              <div class="nonloop-block-13 owl-carousel">
-
-                <div class="text-center p-3 p-md-5 bg-white">
-                  <div class="mb-4">            
-                    <img src="{{ asset('assets/images/person_1.jpg') }}" alt="Image" class="w-50 mx-auto img-fluid rounded-circle">
-                  </div>
-                  <div class="">
-                    <h3 class="font-weight-light h5">Megan Smith</h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Et, iusto. Aliquam illo, cum sed ea? Ducimus quos, ea?</p>
-                  </div>
-                </div>
-
-                <div class="text-center p-3 p-md-5 bg-white">
-                  <div class="mb-4">            
-                    <img src="{{ asset('assets/images/person_2.jpg') }}" alt="Image" class="w-50 mx-auto img-fluid rounded-circle">
-                  </div>
-                  <div class="">
-                    <h3 class="font-weight-light h5">Brooke Cagle</h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Et, iusto. Aliquam illo, cum sed ea? Ducimus quos, ea?</p>
-                  </div>
-                </div>
-
-                <div class="text-center p-3 p-md-5 bg-white">
-                  <div class="mb-4">            
-                    <img src="{{ asset('assets/images/person_3.jpg') }}" alt="Image" class="w-50 mx-auto img-fluid rounded-circle">
-                  </div>
-                  <div class="">
-                    <h3 class="font-weight-light h5">Philip Martin</h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Et, iusto. Aliquam illo, cum sed ea? Ducimus quos, ea?</p>
-                  </div>
-                </div>
-
-                <div class="text-center p-3 p-md-5 bg-white">
-                  <div class="mb-4">            
-                    <img src="{{ asset('assets/images/person_4.jpg') }}" alt="Image" class="w-50 mx-auto img-fluid rounded-circle">
-                  </div>
-                  <div class="">
-                    <h3 class="font-weight-light h5">Steven Ericson</h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Et, iusto. Aliquam illo, cum sed ea? Ducimus quos, ea?</p>
-                  </div>
-                </div>
-
-                <div class="text-center p-3 p-md-5 bg-white">
-                  <div class="mb-4">            
-                    <img src="{{ asset('assets/images/person_5.jpg') }}" alt="Image" class="w-50 mx-auto img-fluid rounded-circle">
-                  </div>
-                  <div class="">
-                    <h3 class="font-weight-light h5">Nathan Dumlao</h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Et, iusto. Aliquam illo, cum sed ea? Ducimus quos, ea?</p>
-                  </div>
-                </div>
-
-                <div class="text-center p-3 p-md-5 bg-white">
-                  <div class="mb-4">            
-                    <img src="{{ asset('assets/images/person_6.jpg') }}" alt="Image" class="w-50 mx-auto img-fluid rounded-circle">
-                  </div>
-                  <div class="">
-                    <h3 class="font-weight-light h5">Brook Smith</h3>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Et, iusto. Aliquam illo, cum sed ea? Ducimus quos, ea?</p>
-                  </div>
-                </div>
-
-              </div>
-            </div>
+          <div class="col-lg-4">
+            <h3>Subscribe</h3>
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quod, quibusdam!</p>
+            <form action="#" class="form-subscribe">
+              <input type="email" class="form-control mb-3" placeholder="Enter Email">
+              <input type="submit" class="btn btn-primary" value="Subscribe">
+            </form>
           </div>
-
-
-          <div class="site-blocks-cover overlay inner-page-cover" style="background-image: url({{ asset('assets/images/hero_bg_1.jpg') }});" data-aos="fade" data-stellar-background-ratio="0.5">
-            <div class="container">
-              <div class="row align-items-center justify-content-center text-center">
-
-                <div class="col-md-6" data-aos="fade-up" data-aos-delay="400">
-                  <h2>Subscribe</h2>
-                  <p class="mb-5">Lorem ipsum dolor sit amet, consectetur adipisicing elit nihil saepe libero sit odio obcaecati veniam.</p>
-                  <form action="#" method="post" class="site-block-subscribe">
-                    <div class="input-group mb-3">
-                      <input type="text" class="form-control border-secondary text-white bg-transparent" placeholder="Enter Email" aria-label="Enter Email" aria-describedby="button-addon2">
-                      <div class="input-group-append">
-                        <button class="btn btn-primary" type="button" id="button-addon2">Send</button>
-                      </div>
-                    </div>
-                  </form>
-                </div>
-              </div>
-            </div>
-          </div>  
-
-          <footer class="site-footer">
-            <div class="container">
-              <div class="row">
-                <div class="col-lg-4">
-                  <h3>About Us</h3>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Praesentium animi, odio beatae aspernatur natus recusandae quasi magni eum voluptatem nam!</p>
-                </div>
-                <div class="col-lg-3 mx-auto">
-                  <h3>Navigation</h3>
-                  <ul class="list-unstyled">
-                    <li><a href="#">Podcasts</a></li>
-                    <li><a href="#">Services</a></li>
-                    <li><a href="#">About Us</a></li>
-                    <li><a href="#">Blog</a></li>
-                    <li><a href="#">Contact</a></li>
-                  </ul>
-                </div>
-                <div class="col-lg-4">
-                  <h3>Subscribe</h3>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quod, quibusdam!</p>
-                  <form action="#" class="form-subscribe">
-                    <input type="email" class="form-control mb-3" placeholder="Enter Email">
-                    <input type="submit" class="btn btn-primary" value="Subscribe">
-                  </form>
-                </div>
-              </div>
-
-              <div class="row pt-5 mt-5 text-center">
-                <div class="col-md-12">
-                  <p>
-                    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                    Copyright &copy;<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="icon-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank" >Colorlib</a>
-                    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                  </p>
-                </div>
-
-              </div>
-            </div>
-          </footer>
         </div>
 
-        @include('partials.scripts')
-        <script>
-          document.addEventListener('DOMContentLoaded', function() {
-            var mediaElements = document.querySelectorAll('video, audio'), total = mediaElements.length;
+        <div class="row pt-5 mt-5 text-center">
+          <div class="col-md-12">
+            <p>
+              <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+              Copyright &copy;<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="icon-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank" >Colorlib</a>
+              <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+            </p>
+          </div>
+          
+        </div>
+      </div>
+    </footer>
+  </div>
 
-            for (var i = 0; i < total; i++) {
-              new MediaElementPlayer(mediaElements[i], {
-                pluginPath: 'https://cdn.jsdelivr.net/npm/mediaelement@4.2.7/build/',
-                shimScriptAccess: 'always',
-                success: function () {
-                  var target = document.body.querySelectorAll('.player'), targetTotal = target.length;
-                  for (var j = 0; j < targetTotal; j++) {
-                    target[j].style.visibility = 'visible';
-                  }
+  @include('partials.scripts')
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const followBtn = document.getElementById('follow-btn');
+
+      if (followBtn) {
+          followBtn.addEventListener('click', () => {
+              const isFollowing = followBtn.textContent.trim() === 'UnFollow';
+              const url = isFollowing ? '{{ route('unfollow') }}' : '{{ route('follow') }}';
+              const podcasterId = '{{ $podcast->podcaster->id }}';
+              const token = '{{ csrf_token() }}';
+
+              fetch(url, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'X-CSRF-TOKEN': token
+                },
+                body: JSON.stringify({ podcaster_id: podcasterId })
+              })
+              .then(response => response.json())
+              .then(data => {
+                if (data.status === 1) {
+                  followBtn.textContent = isFollowing ? 'Follow' : 'UnFollow';
+                } else {
+                  alert(data.message);
                 }
-              });
-            }
+              })
+              .catch(error => console.error('Error:', error));
           });
-        </script>
+      }
+    });
+  </script>
 
 
-        <script src="{{ asset('assets/js/main.js') }}"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var mediaElements = document.querySelectorAll('video, audio'), total = mediaElements.length;
 
-      </body>
-      </html>
+      for (var i = 0; i < total; i++) {
+        new MediaElementPlayer(mediaElements[i], {
+          pluginPath: 'https://cdn.jsdelivr.net/npm/mediaelement@4.2.7/build/',
+          shimScriptAccess: 'always',
+          success: function () {
+            var target = document.body.querySelectorAll('.player'), targetTotal = target.length;
+            for (var j = 0; j < targetTotal; j++) {
+              target[j].style.visibility = 'visible';
+            }
+          }
+        });
+      }
+    });
+  </script>
+
+
+  <script src="{{ asset('assets/js/main.js') }}"></script>
+
+</body>
+</html>

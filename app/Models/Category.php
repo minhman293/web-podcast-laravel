@@ -12,4 +12,9 @@ class Category extends Model
     protected $fillable = [
         'name',
     ];
+
+    public function podcasts()
+    {
+        return $this->hasMany(Podcast::class, 'category_id');
+    }
 }

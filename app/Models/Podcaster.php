@@ -7,9 +7,10 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Hash;
 
+use Illuminate\Support\Facades\Hash;
 class Podcaster extends Authenticatable implements MustVerifyEmail
+
 {
     use HasFactory, Notifiable;
 
@@ -25,5 +26,30 @@ class Podcaster extends Authenticatable implements MustVerifyEmail
     public function setPasswordAttribute($value)
     {
         $this->attributes['password'] = Hash::make($value);
+    }
+
+    public function podcasts()
+    {
+        return $this->hasMany(Podcast::class, 'podcaster_id');
+    }
+
+    public function podcaster_follows()
+    {
+        return $this->hasMany(PodcasterFollower::class, 'podcaster_id');
+    }
+
+    public function podcaster_follower()
+    {
+        return $this->hasMany(PodcasterFollower::class, 'follower_id');
+    }
+
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class, 'podcaster_id');
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class, 'podcaster_id');
     }
 }

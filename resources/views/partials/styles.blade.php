@@ -13,5 +13,17 @@
 <link rel="stylesheet" href="{{asset('assets/css/aos.css')}}">
 
 <link rel="stylesheet" href="{{asset('assets/css/style.css')}}">
+
+<style>
+    .podcaster-link {
+        color: inherit; /* Giữ nguyên màu chữ hiện tại */
+        text-decoration: none; /* Loại bỏ gạch chân */
+    }
+
+    .podcaster-link:hover {
+        color: red; /* Màu chữ khi hover */
+    }
+</style>
+
 <link rel="stylesheet" href="{{asset('assets/css/custom.css')}}">
 

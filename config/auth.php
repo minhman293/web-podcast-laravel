@@ -62,6 +62,7 @@ return [
     'providers' => [
         'podcasters' => [
             'driver' => 'eloquent',
+            // 'model' => App\Models\User::class,
             'model' => App\Models\Podcaster::class,
         ],
 
