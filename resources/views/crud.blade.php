@@ -108,7 +108,7 @@
             <div class="d-flex justify-content-between mb-3">
               <form action="{{ route('podcast.crud') }}" method="GET" class="flex-grow-1 mr-4" data-aos="fade-up" id="searchForm">
                 <div class="input-group">
-                  <input class="form-control" type="search" name="search" placeholder="Search by title, description, author or category" 
+                  <input class="form-control" type="search" name="search" placeholder="Search by title, description" 
                         value="{{ request('search') }}" aria-label="Search">
                       <button class="btn btn-primary search-button" data-aos="fade-up" type="submit" style="Color: white">Search</button>
                       @if(request('search'))
