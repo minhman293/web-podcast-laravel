@@ -137,7 +137,7 @@
                                 style="background-image: url('{{ $item->image }}');"></div>
                             <div class="text">
 
-                                <h3 class="font-weight-light"><a href="single-post.html">{{ $item->title }}</a></h3>
+                                <h3 class="font-weight-light"><a href="{{ route('podcast.podcast_detail', ['category' => $item->category->name, 'id' => $item->id]) }}">{{ $item->title }}</a></h3>
                                 <div class="text-white mb-3"><span class="text-black-opacity-05"><small>{{ $item->description }}<span class="sep">/</span>{{ $item->created_at->format('Y-m-d') }} <span
                                                 class="sep">/</span> {{ gmdate('H:i:s', $item->duration) }}</small></span></div>
 
