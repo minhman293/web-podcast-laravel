@@ -6,7 +6,7 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\PodcastController;
+use App\Http\Controllers\Podcast\PodcastController;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
