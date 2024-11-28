@@ -26,7 +26,7 @@ class PodcastController extends Controller
                       ->orWhere('description', 'LIKE', '%'.$search.'%');
                 });
             }
-    
+            
             // Get paginated results
             $podcasts = $query->orderBy('created_at', 'desc')
                              ->paginate(5)

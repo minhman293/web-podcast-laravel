@@ -89,7 +89,7 @@
 
             @if ($is_owner)
                 <a class="profile__link_btn" href="{{ route('podcasters.edit', $podcaster->id) }}">Update information</a>
-                <a class="profile__link_btn" href="{{ route('podcasters.edit', $podcaster->id) }}">Podcast Management</a>
+                <a class="profile__link_btn" href="{{ route('podcast.crud', $podcaster->id) }}">Podcast Management</a>
             @endif
 
                 @if (Auth::id() != $podcaster->id)

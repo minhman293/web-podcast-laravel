@@ -138,7 +138,7 @@
                           <div class="image" style="background-image: url('{{ $imageSource }}');"></div>
                           <div class="text">
                               <h3 class="font-weight-light">
-                                  <a href="{{ url('podcast/'.$podcast->id) }}">{{ $podcast->title }}</a>
+                                  <a href="{{ route('podcast.podcast_detail', ['category' => $podcast->category->name, 'id' => $podcast->id]) }}">{{ $podcast->title }}</a>
                               </h3>
                               <p class="mb-4">{{ $podcast->description }}</p>
                               <div class="player">
