@@ -83,7 +83,6 @@ Route::middleware(['web'])->group(function () {
         Route::delete('/comments/{id}', [CommentController::class, 'destroy'])->name('comments.destroy');
 
     });
-});
 
     Route::post('/follow', [PodcasterFollowerController::class, 'follow'])->name('follow');
     Route::post('/unfollow', [PodcasterFollowerController::class, 'unfollow'])->name('unfollow');
@@ -98,6 +97,7 @@ Route::middleware(['web'])->group(function () {
     Route::post('/crud/add', [PodcastController::class, 'addPodcast'])->name('podcast.addPodcast');
 
     Route::delete('/crud/delete/{id}', [PodcastController::class, 'deletePodcast'])->name('podcast.deletePodcast');
+    Route::post('/crud/restore/{id}', [PodcastController::class, 'restore'])->name('podcast.restore');
 
     Route::get('/crud/update/{id}', [PodcastController::class, 'loadUpdatePage'])->name('podcast.loadUpdatePage');
     Route::put('/crud/update/{id}', [PodcastController::class, 'updatePodcast'])->name('podcast.updatePodcast');
