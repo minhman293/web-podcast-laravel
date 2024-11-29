@@ -34,3 +34,15 @@
 input.form-control {
         margin-top: 8px;
     }
+
+.custom-pagination {
+    margin-top: 30px;
+}
+.custom-pagination nav {
+    display: flex;
+    justify-content: center;
+}
+.page-item.active .page-link {
+    background-color: #007bff;
+    border-color: #007bff;
+}

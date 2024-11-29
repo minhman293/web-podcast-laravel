@@ -40,7 +40,7 @@
 
               <ul class="site-menu js-clone-nav d-none d-lg-block">
                 <li class="active">
-                  <a href="index.html">Home</a>
+                  <a href="{{ route('index') }}">Home</a>
                 </li>
                 <li class="has-children">
                   <a href="#">Dropdown</a>
@@ -50,9 +50,19 @@
                     <li><a href="#">Menu Three</a></li>
                   </ul>
                 </li>
-                <li><a href="about.html">About</a></li>
-                <li><a href="contact.html">Contact</a></li>
-                <li><a href="login-register.html">Login / Register</a></li>
+                <li><a href="{{ route('about') }}">About</a></li>
+                <li><a href="{{ route('contact') }}">Contact</a></li>
+                @auth
+                <li class="active"><a>Hello, {{ Auth::user()->name }}</a></li>
+                <li><a>
+                    <form method="POST" action="{{ route('logout') }}" class="logout-form">
+                      @csrf
+                      <button type="submit" class="logout-button">Logout</button>
+                    </form>
+                  </a></li>
+                @else
+                <li><a href="{{ route('login') }}">Login</a></li>
+                @endauth
               </ul>
             </nav>
 
@@ -103,8 +113,8 @@
                   </div>
                   
                   <div class="form-group">
-                      <label for="author">Podcast Author</label>
-                      <input type="text" class="form-control" id="author" name="author" value="{{ $podcast->author }}" required>
+                      <label for="podcaster_id">Podcast Author</label>
+                      <input type="text" class="form-control" id="podcaster_id" name="podcaster_id" value="{{ $podcast->podcaster_id }}" readonly>
                   </div>
 
                   <div class="form-group">
@@ -129,6 +139,26 @@
                       <small class="form-text text-muted">Maximum file size: 50MB. Leave empty to keep existing audio.</small>
                       <div class="mt-2">Current audio: {{ $podcast->audio }}</div>
                   </div>
+                  <script>
+                    document.getElementById('audio').addEventListener('change', function(e) {
+                        const file = e.target.files[0];
+                        const audio = document.createElement('audio');
+                        const reader = new FileReader();
+
+                        reader.onload = function(e) {
+                            audio.src = e.target.result;
+                            
+                            // When audio metadata is loaded, get duration
+                            audio.addEventListener('loadedmetadata', function() {
+                                // Round duration to whole number
+                                const duration = Math.round(audio.duration);
+                                document.getElementById('duration').value = duration;
+                            });
+                        };
+
+                        reader.readAsDataURL(file);
+                    });
+                  </script>
 
                   <div class="form-group">
                       <label for="image">New Podcast Image (optional)</label>
