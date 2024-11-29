@@ -11,8 +11,8 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Podcaster;
-
-use App\Routes;
+use App\Services\Notification\NotificationService;
+use Illuminate\Support\Facades\Log;
 
 class PodcastController extends Controller
 {
@@ -55,7 +55,7 @@ class PodcastController extends Controller
             return view('crud', compact('podcasts', 'showDeleted'));
     
         } catch (\Exception $e) {
-            \Log::error('Search error: ' . $e->getMessage());
+            Log::error('Search error: ' . $e->getMessage());
             return back()->with('error', 'An error occurred while searching podcasts');
         }
     }
@@ -71,7 +71,7 @@ public function restore($id)
                 ->with('success', 'Podcast restored successfully');
                 
         } catch (\Exception $e) {
-            \Log::error('Podcast restore error: ' . $e->getMessage());
+            Log::error('Podcast restore error: ' . $e->getMessage());
             return back()->with('error', 'Error restoring podcast');
         }
     }
@@ -88,7 +88,7 @@ public function restore($id)
         return view('crud-add', compact('categories'));
     }
 
-    public function addPodcast(Request $request)
+    public function addPodcast(Request $request, NotificationService $notificationService)
     {
         $request->validate([
             'title' => 'required|string|max:255',
@@ -156,11 +156,12 @@ public function restore($id)
                 'category_id' => $request->category_id,
                 'podcaster_id' => $request->podcaster_id, // Uncomment if you want to add a podcaster relationship to the podcast.
             ]);
-
+            // Gửi thông báo tới những người theo dõi
+            $notificationService->podcastCreated($podcasterId, $podcast);
             return redirect()->route('podcast.crud')->with('success', 'Podcast added successfully!');
 
         } catch (\Exception $e) {
-            \Log::error('Podcast upload error: ' . $e->getMessage());
+            Log::error('Podcast upload error: ' , ['error'=> $e->getMessage(),'request' => $request->all(),] );
             return back()->with('error', 'Error uploading podcast: ' . $e->getMessage())->withInput();
         }
     }
@@ -188,7 +189,7 @@ public function restore($id)
             
             return redirect()->route('podcast.crud')->with('success', 'Podcast deleted successfully!');
         } catch (\Exception $e) {
-            \Log::error('Podcast deletion error: ' . $e->getMessage());
+            Log::error('Podcast deletion error: ' . $e->getMessage());
             return back()->with('error', 'Error deleting podcast: ' . $e->getMessage());
         }
     }
@@ -268,7 +269,7 @@ public function restore($id)
 
             return redirect()->route('podcast.crud')->with('success', 'Podcast updated successfully!');
         } catch (\Exception $e) {
-            \Log::error('Podcast update error: ' . $e->getMessage());
+            Log::error('Podcast update error: ' . $e->getMessage());
             return back()->with('error', 'Error updating podcast: ' . $e->getMessage())->withInput();
         }
     }
