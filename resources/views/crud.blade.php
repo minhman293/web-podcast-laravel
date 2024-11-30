@@ -39,8 +39,8 @@
               <div class="d-block d-lg-none ml-md-0 mr-auto"><a href="#" class="site-menu-toggle js-menu-toggle text-black"><span class="icon-menu h3"></span></a></div>
 
               <ul class="site-menu js-clone-nav d-none d-lg-block">
-                <li >
-                  <a href="{{ route('index') }}">Home</a>
+                <li class="active">
+                  <a href="{{ url('/') }}">Home</a>
                 </li>
                 <li class="has-children">
                   <a href="#">Dropdown</a>
@@ -52,17 +52,28 @@
                 </li>
                 <li><a href="{{ route('about') }}">About</a></li>
                 <li><a href="{{ route('contact') }}">Contact</a></li>
+
+
+
                 @auth
-                <li class="active"><a>Hello, {{ Auth::user()->name }}</a></li>
-                <li><a>
-                    <form method="POST" action="{{ route('logout') }}" class="logout-form">
-                      @csrf
-                      <button type="submit" class="logout-button">Logout</button>
-                    </form>
-                  </a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Hello, {{ Auth::user()->name }}
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="{{ route('podcasters.index', Auth::id()) }}">View profile</a>
+                        <a class="dropdown-item" href="{{ route('podcasters.edit', Auth::id()) }}">Update profile</a>
+                        <div class="dropdown-divider"></div>
+                        <form method="POST" action="{{ route('logout') }}" class="logout-form">
+                            @csrf
+                            <button type="submit" class="dropdown-item">Log out</button>
+                        </form>
+                    </div>
+                </li>
                 @else
                 <li><a href="{{ route('login') }}">Login</a></li>
                 @endauth
+
               </ul>
             </nav>
 
@@ -86,7 +97,7 @@
           <p>Below is your podcast that you uploaded, you can add, delete, update them when ever you want !</p>
           <div class="text-left mb-4">
             <p class=""> If you want to update your profile</p>
-            <a href="" class="btn btn-primary">
+            <a href="{{ route('podcasters.edit', Auth::id()) }}" class="btn btn-primary">
               <i class="fas fa-user-edit mr-2"></i>Update Profile
             </a>
           </div>
