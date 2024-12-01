@@ -11,7 +11,9 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Podcaster;
-use App\Services\Notification\NotificationService;
+use App\Services\Podcasts\PodcastService;
+use App\WebSocket\WebSocketClient;
+use Exception;
 use Illuminate\Support\Facades\Log;
 
 class PodcastController extends Controller
@@ -88,7 +90,7 @@ public function restore($id)
         return view('crud-add', compact('categories'));
     }
 
-    public function addPodcast(Request $request, NotificationService $notificationService)
+    public function addPodcast(Request $request, WebSocketClient $webSocketClient)
     {
         $request->validate([
             'title' => 'required|string|max:255',
@@ -100,6 +102,7 @@ public function restore($id)
         ]);
 
         try {
+            
             $podcasterId = Auth::user()->id;
             // Handle audio file upload
             if ($request->hasFile('audio')) {
@@ -156,8 +159,10 @@ public function restore($id)
                 'category_id' => $request->category_id,
                 'podcaster_id' => $request->podcaster_id, // Uncomment if you want to add a podcaster relationship to the podcast.
             ]);
-            // Gửi thông báo tới những người theo dõi
-            $notificationService->podcastCreated($podcasterId, $podcast);
+
+            // Send notification
+            $webSocketClient->sendNewPodcastNotification(Auth::user(), $podcast);
+
             return redirect()->route('podcast.crud')->with('success', 'Podcast added successfully!');
 
         } catch (\Exception $e) {
@@ -290,5 +295,22 @@ public function restore($id)
         $otherPodcasts = Podcast::where('id', '!=', $id)->get();
     
         return view('/podcast/single-podcast', compact('podcast', 'podcasters', 'otherPodcasts'));
+    }
+
+    public function redirectByPodcastId(Podcast $podcast)
+    {
+        return redirect()->route('podcast.podcast_detail', [$podcast->category->name, $podcast->id]);
+    }
+
+    public function getLastPodCastByPodcasterId(string $podcasterId, PodcastService $podcastService)
+    {
+        try {
+            $lastPodcast = $podcastService->getLastPodCastByPodcasterId($podcasterId);
+            return response()->json($lastPodcast);
+        } catch (Exception $e) {
+            Log::error($e);
+            return response()->json(['error' => 'Failed to get last podcast'], 500);
+        }
+
     }
 }

@@ -3,10 +3,48 @@
 namespace App\Services\Notification;
 
 use App\Models\Notification;
-
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+
 class NotificationService
 {
+    private Notification $notification;
+    public function __construct(Notification $notification)
+    {
+        $this->notification = $notification;
+    }
+    public function create($params)
+    {
+        try {
+            return $this->notification->create($params);
+        } catch (\Exception $e) {
+            Log::error($e);
+            return false;
+        }
+    }
+
+    public function updateStatus($receiverId)
+    {
+        try {
+            $this->notification->where('receiver_id', $receiverId)->update(['is_seen' => 1]);
+            return true;
+        } catch (\Exception $e) {
+            Log::error($e);
+            throw $e;
+            // return false;
+        }
+    }
+
+    public function getNotificationsByReceiverId($receiverId) 
+    {
+        try {
+            return $this->notification->where('receiver_id', $receiverId)->orderBy('created_at', 'desc')->get();
+        } catch (\Exception $e) {
+            Log::error($e);
+            return new Collection();
+        }
+    }
+
     // Thông báo podcast mới được tạo
     public function podcastCreated($podcaster, $podcast)
     {

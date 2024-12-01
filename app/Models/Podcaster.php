@@ -9,10 +9,12 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Model;
 
 use Illuminate\Support\Facades\Hash;
+use Laravel\Sanctum\HasApiTokens;
+
 class Podcaster extends Authenticatable implements MustVerifyEmail
 
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasApiTokens;
 
     protected $fillable = [
         'name',
