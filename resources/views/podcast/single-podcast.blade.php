@@ -9,6 +9,7 @@
 
 </head>
 <body>
+  <button onclick="sendMessage()">Send message!</button>
 
   <div class="site-wrap">
 
@@ -143,7 +144,7 @@
           <!-- Comment Input -->
           @if(Auth::check())
             <div class="comment-input">
-              <form action="{{ route('comments.store') }}" method="POST">
+              <form action="{{ route('comments.store') }}" method="POST" id="comment_form" data-user-name="{{ Auth::user()->name }}">
                 @csrf
                 <input type="hidden" name="podcast_id" value="{{ $podcast->id }}">
                 <textarea name="content" placeholder="Write a comment..." rows="5"></textarea>
@@ -311,6 +312,24 @@
   </div>
 
   @include('partials.scripts')
+
+  <script>
+    const socket = new WebSocket('ws://localhost:8080/ws');
+
+    socket.onmessage = function(e) {
+        alert(e.data);
+    };
+    function sendMessage({ msg }) {
+        socket.send(msg)
+    }
+      
+      document.getElementById('comment_form').addEventListener('submit', function (e) {
+        e.preventDefault();
+        const commenter = e.target.getAttribute('data-user-name');
+        sendMessage({msg: `${commenter} commented on your podcast!`});
+        e.target.submit();
+    })
+  </script>
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
