@@ -10,9 +10,11 @@ class Notification extends Model
     use HasFactory;
 
     protected $fillable = [
-        'content',
+        'sender_id',
+        'receiver_id',
         'podcast_id',
-        'podcaster_id'
+        'content',
+        'is_seen'
     ];
 
     public function podcast()

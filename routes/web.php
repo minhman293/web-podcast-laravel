@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Podcast\PodcastController;
 use App\Http\Controllers\Comment\CommentController;
+use App\Http\Controllers\Notification\NotificationController;
 use App\Http\Controllers\PodcasterFollower\PodcasterFollowerController;
 /*
 |--------------------------------------------------------------------------
@@ -75,6 +76,7 @@ Route::middleware(['web'])->group(function () {
     Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
 
 
+    Route::get('/podcast/redirect/{podcast}', [PodcastController::class, 'redirectByPodcastId'])->name('podcast.redirect');
     Route::get('/{category}/podcast/{id}', [PodcastController::class, 'podcast_detail'])->name('podcast.podcast_detail');
 
     Route::middleware('auth:sanctum')->group(function () {

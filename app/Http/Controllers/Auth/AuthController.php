@@ -35,7 +35,7 @@ class AuthController extends Controller
 
         if($loginResult['status']) {
             Auth::loginUsingId($loginResult['podcaster']->id);
-            return redirect('/')->with('success', 'login successfully');
+            return redirect('/')->with('success', 'login successfully')->cookie($this->createCookies());
         }
 
         return redirect()->route('get_login')->with('error', 'login failed');
@@ -93,12 +93,21 @@ class AuthController extends Controller
 
             if ($user) {
                 Auth::loginUsingId($user->id);
-                return redirect()->route('index');
+                return redirect()->route('index')->cookie($this->createCookies());
             }
             return redirect()->route('get_login')->with('error', 'Login failed');
         } catch (\Exception $e) {
             Log::error($e);
             return redirect()->route('get_login')->with('error', 'Login failed');
         }
+    }
+
+    public function createCookies() 
+    {
+       if(Auth::check()) {
+            $token = Auth::user()->createToken('API Token')->plainTextToken;
+            $cookie = cookie('token', $token, 60 * 24 * 365, '/', null, false, false);
+            return $cookie;
+       }
     }
 }

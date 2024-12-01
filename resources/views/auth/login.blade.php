@@ -100,10 +100,10 @@
                             </ul>
                         </div>
                         @endif
-                        <a href="{{ route('auth.social.redirect', ['provider' => 'google']) }}" class="google_login_btn">
+                        {{-- <a href="{{ route('auth.social.redirect', ['provider' => 'google']) }}" class="google_login_btn">
                             <img src="{{ asset('/assets/images/google_icon.png') }}" width="30px"> 
                             Login with Google 
-                        </a>
+                        </a> --}}
                         <form action="{{ route('login') }}" method="post" class="bg-white">
                             @csrf
 
@@ -129,10 +129,10 @@
                             <div class="form-group row">
                                 <div class="col-lg-12">
                                     <span>Or login with</span>
-                                    <a href="#" class="btn btn-primary ml-2">
+                                    {{-- <a href="#" class="btn btn-primary ml-2">
                                         <i class="fab fa-facebook-f"></i> Facebook
-                                    </a>
-                                    <a href="#" class="btn btn-danger ml-2">
+                                    </a> --}}
+                                    <a href="{{ route('auth.social.redirect', ['provider' => 'google']) }}" class="btn btn-danger ml-2">
                                         <i class="fab fa-google"></i> Google
                                     </a>
                                 </div>

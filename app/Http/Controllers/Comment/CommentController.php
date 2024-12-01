@@ -8,22 +8,17 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Comment;
 use App\Models\Podcast;
+use App\Models\Podcaster;
 use App\Services\Notification\NotificationService;
+use App\WebSocket\WebSocketClient;
 use Illuminate\Support\Facades\Log;
 
 class CommentController extends Controller
 {
-    private NotificationService $notificationService;
-
-    public function __construct(NotificationService $notificationService)
-    {
-        $this->notificationService = $notificationService;
-    }
-    
     // --------------------------------
     // Create Comment --------------------------------
     
-    public function store(Request $request)
+    public function store(Request $request, WebSocketClient $webSocketClient)
     {
         $validator = Validator::make($request->all(), [
             'content' => 'required',
@@ -42,13 +37,16 @@ class CommentController extends Controller
     
             $commenter = auth()->user();
 
+            // Send notification
+            $webSocketClient->sendCommentNotification(
+                $commenter, 
+                Podcaster::where('id', $podcast->podcaster_id)->first(), $podcast);
+
             $comment = Comment::create([
                 'content' => $request->content,
                 'podcast_id' => $request->podcast_id,
                 'podcaster_id' => Auth::id(),
             ]);
-            // Gửi thông báo tới chủ sở hữu podcast
-            $this->notificationService->podcastCommented($commenter, $podcast, $comment);
             
             return redirect()->back()->with('success', 'Comment created.');
             } catch (\Exception $e) {

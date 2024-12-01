@@ -8,7 +8,7 @@ use App\WebSocket\WebSocketServer;
 
 class WebSocketCommand extends Command
 {
-    protected $signature = 'websocket:serve';
+    protected $signature = 'ws:serve';
     protected $description = 'Run the WebSocket server';
 
     public function __construct()
@@ -18,10 +18,11 @@ class WebSocketCommand extends Command
 
     public function handle()
     {
-        $this->info('Starting WebSocket server...');
+        $HOST = env('WS_URL', 'localhost');
+        $PORT = env('WS_PORT', 8080);
+        $this->info("Starting WebSocket server on port $PORT...");
 
-        // $server = new App(env('WS_URL'), env('WS_PORT', 8080));
-        $server = new App('localhost', 8080);
+        $server = new App($HOST, $PORT);
         $server->route('/ws', new WebSocketServer, ['*']);
         $server->run();
     }
