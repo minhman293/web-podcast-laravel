@@ -117,14 +117,15 @@ public function restore($id)
                 'podcaster_id' => Auth::user()->id,
             ]);
             // Gửi thông báo tới những người theo dõi
-            $notificationService->podcastCreated($podcasterId, $podcast);
+            $podcaster = Auth::user();
+            $notificationService->podcastCreated($podcaster, $podcast);
             return redirect()->route('podcast.crud')->with('success', 'Podcast added successfully!');
         } catch (\Exception $e) {
 
             // Log::error('Podcast upload error: ' , ['error'=> $e->getMessage(),'request' => $request->all(),] );
             // return back()->with('error', 'Error uploading podcast: ' . $e->getMessage())->withInput();
 
-            \Log::error('Podcast upload error: ' . $e->getMessage());
+            Log::error('Podcast upload error: ' . $e->getMessage());
             return back()->with('error', 'Error creating podcast: ' . $e->getMessage())->withInput();
 
         }
