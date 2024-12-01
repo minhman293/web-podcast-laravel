@@ -33,12 +33,12 @@ class Podcaster extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Podcast::class, 'podcaster_id');
     }
 
-    public function podcaster_follows()
+    public function followings()
     {
         return $this->hasMany(PodcasterFollower::class, 'podcaster_id');
     }
 
-    public function podcaster_follower()
+    public function followers()
     {
         return $this->hasMany(PodcasterFollower::class, 'follower_id');
     }

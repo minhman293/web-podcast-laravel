@@ -9,6 +9,7 @@
 
 </head>
 <body>
+  <button onclick="sendMessage()">Send message!</button>
 
   <div class="site-wrap">
 
@@ -95,7 +96,7 @@
               <source src="{{ asset($podcast->audio) }}" type="audio/mp3">
             </audio>
           </div>
-          @if(Auth::check())
+          @if(Auth::check() && Auth::id() != $podcast->podcaster->id)
               @php
                 $isFollowing = \App\Models\PodcasterFollower::where('podcaster_id', $podcast->podcaster->id)
                                                             ->where('follower_id', Auth::id())
@@ -143,7 +144,7 @@
           <!-- Comment Input -->
           @if(Auth::check())
             <div class="comment-input">
-              <form action="{{ route('comments.store') }}" method="POST">
+              <form action="{{ route('comments.store') }}" method="POST" id="comment_form" data-user-name="{{ Auth::user()->name }}">
                 @csrf
                 <input type="hidden" name="podcast_id" value="{{ $podcast->id }}">
                 <textarea name="content" placeholder="Write a comment..." rows="5"></textarea>
@@ -313,35 +314,57 @@
   @include('partials.scripts')
 
   <script>
+    const socket = new WebSocket('ws://localhost:8080/ws');
+
+    socket.onmessage = function(e) {
+        alert(e.data);
+    };
+    function sendMessage({ msg }) {
+        socket.send(msg)
+    }
+      
+      document.getElementById('comment_form').addEventListener('submit', function (e) {
+        e.preventDefault();
+        const commenter = e.target.getAttribute('data-user-name');
+        sendMessage({msg: `${commenter} commented on your podcast!`});
+        e.target.submit();
+    })
+  </script>
+
+  <script>
     document.addEventListener("DOMContentLoaded", () => {
-      const followBtn = document.getElementById('follow-btn');
+        const followBtn = document.getElementById('follow-btn');
 
-      if (followBtn) {
-          followBtn.addEventListener('click', () => {
-              const isFollowing = followBtn.textContent.trim() === 'UnFollow';
-              const url = isFollowing ? '{{ route('unfollow') }}' : '{{ route('follow') }}';
-              const podcasterId = '{{ $podcast->podcaster->id }}';
-              const token = '{{ csrf_token() }}';
+        if (followBtn) {
+            followBtn.addEventListener('click', () => {
+                const isFollowing = followBtn.textContent.trim() === 'UnFollow';
+                const url = isFollowing ? '{{ route('unfollow') }}' : '{{ route('follow') }}';
+                const podcasterId = '{{ $podcast->podcaster->id }}';
+                const token = '{{ csrf_token() }}';
 
-              fetch(url, {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                  'X-CSRF-TOKEN': token
-                },
-                body: JSON.stringify({ podcaster_id: podcasterId })
-              })
-              .then(response => response.json())
-              .then(data => {
-                if (data.status === 1) {
-                  followBtn.textContent = isFollowing ? 'Follow' : 'UnFollow';
-                } else {
-                  alert(data.message);
-                }
-              })
-              .catch(error => console.error('Error:', error));
-          });
-      }
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': token
+                    },
+                    body: JSON.stringify({ podcaster_id: podcasterId })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 1) {
+                        // Reload page after successful follow/unfollow
+                        window.location.reload();
+                    } else {
+                        alert(data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('An error occurred. Please try again.');
+                });
+            });
+        }
     });
   </script>
 

@@ -5,7 +5,7 @@ namespace App\Services\Podcasts;
 
 use App\Models\Podcast;
 
-class PodCastService 
+class PodcastService 
 {
     private Podcast $podcast;
 
