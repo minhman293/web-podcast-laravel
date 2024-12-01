@@ -1,7 +1,7 @@
 // const token = getCookieByName({ name: 'token' })
 const userId = document.querySelector('meta[name="user-id"]').getAttribute('content');
 const WS_CLIENT = document.querySelector('meta[name="ws-client"]').getAttribute('content');
-const socket = new WebSocket(`ws://localhost:8080/ws?user_id=${userId}`);
+const socket = new WebSocket(`${WS_CLIENT}?user_id=${userId}`);
 
 function createNotification(data) {
     const list = document.getElementById('__notification_list')

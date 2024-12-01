@@ -18,6 +18,8 @@
               <li class="active">
                 <a href="{{ url('/') }}">Home</a>
               </li>
+               <li><a href="{{ route('about') }}">About</a></li>
+              <li><a href="{{ route('contact') }}">Contact</a></li>
               <li class="has-children">
                 <a href="#" id="__notification_label" class="notification_label">Notifications
                   <sup id="__notification_counts" class="notification_counts {{ $unreadNotificationsCount == 0 ? 'hide' : '' }}">
@@ -29,8 +31,7 @@
                   @endforeach
                 </ul>
               </li>
-              <li><a href="{{ route('about') }}">About</a></li>
-              <li><a href="{{ route('contact') }}">Contact</a></li>
+             
 
               @auth
               <li class="nav-item dropdown">

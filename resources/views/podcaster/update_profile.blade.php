@@ -25,7 +25,11 @@
                         <h3>Image</h3>
                         <p>Photos will appear with your channel in places like next to your profile comments.</p>
                         <div class="profile_page__image_change flex">
-                            <img src="{{ asset('/assets/images/' . $podcaster->image) }}" alt="{{ $podcaster->name }}">
+                            <img src="{{ 
+                                str_contains($podcaster->image, 'http')
+                                  ? $podcaster->image
+                                  : asset('/assets/images/' . $podcaster->image)
+                              }}" alt="{{ $podcaster->name }}">
                             <div>
                                 <p>We recommend images that are at least 98 x 98 pixels in resolution and 4 MB in size. Use PNG or GIF files (no animations).</p>
                                 <!-- Hidden file input -->

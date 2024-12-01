@@ -61,11 +61,15 @@ class AuthController extends Controller
         return redirect()->route('get_register')->with('error', 'Registration failed');
     }
 
-    public function logout()
+    public function logout(Request $request)
     {
-        $this->authService->logout();
+        if(Auth::check()) {
+            $request->user()->tokens()->delete();
+            $cookie = cookie('token', '', -1);
+            $this->authService->logout();
+        }
 
-        return redirect()->route('get_login');
+        return redirect()->route('get_login')->cookie($cookie);
     }
 
     private function validateSocialProvider(string $provider)

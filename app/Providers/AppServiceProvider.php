@@ -33,8 +33,9 @@ class AppServiceProvider extends ServiceProvider
                 ? $notificationService->getNotificationsByReceiverId(Auth::id())
                 : new Collection();  // Hoặc query theo nhu cầu
             $unreadNotificationsCount = $notifications->where('is_seen', 0)->count();
-            $WS_URL = env('WS_CLIENT', 'ws://localhost:8080/ws');
+            $WS_CLIENT = env('WS_CLIENT', 'ws://localhost:8080/ws');
 
+            $view->with('WS_CLIENT', $WS_CLIENT);
             $view->with('notifications', $notifications);
             $view->with('unreadNotificationsCount', $unreadNotificationsCount);
         });

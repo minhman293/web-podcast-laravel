@@ -17,9 +17,8 @@ class WebSocketClient
 
     public function __construct()
     {
-        // $this->client = new Client(env('WS_CLIENT', 'ws://localhost:8080/ws'));
         $userId = Auth::id();
-        $this->client = new Client("ws://localhost:8080/ws?user_id=$userId");
+        $this->client = new Client(env('WS_CLIENT', 'ws://localhost:8080/ws') . "?user_id=$userId");
     }
 
     public function send($data)

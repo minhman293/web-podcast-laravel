@@ -23,40 +23,7 @@
             <div class="site-mobile-menu-body"></div>
         </div>
 
-        <header class="site-navbar py-4" role="banner">
-            <div class="container">
-                <div class="row align-items-center">
-                    <div class="col-3">
-                        <h1 class="site-logo"><a href="index.html" class="h2">Podcast<span class="text-primary">.</span> </a></h1>
-                    </div>
-                    <div class="col-9">
-                        <nav class="site-navigation position-relative text-right text-md-right" role="navigation">
-                            <div class="d-block d-lg-none ml-md-0 mr-auto"><a href="#" class="site-menu-toggle js-menu-toggle text-black"><span class="icon-menu h3"></span></a></div>
-                            <ul class="site-menu js-clone-nav d-none d-lg-block">
-                                <li><a href="{{ url('/') }}">Home</a></li>
-                                <li><a href="about.html">About</a></li>
-                                <li><a href="contact.html">Contact</a></li>
-                                @auth
-                                <li class="has-children">
-                                    <a href="#">Hello, {{ Auth::user()->name }}</a>
-                                    <ul class="dropdown arrow-top">
-                                        <li>
-                                            <form method="POST" action="{{ route('logout') }}" class="logout-form">
-                                                @csrf
-                                                <button type="submit" class="logout-button">Logout</button>
-                                            </form>
-                                        </li>
-                                    </ul>
-                                </li>
-                                @else
-                                <li><a href="{{ route('get_login') }}">Login</a></li>
-                                @endauth
-                            </ul>
-                        </nav>
-                    </div>
-                </div>
-            </div>
-        </header>
+        @include('partials.header')
 
         <div class="site-section">
             <div class="container" data-aos="fade-up">

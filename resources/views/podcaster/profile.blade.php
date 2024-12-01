@@ -22,7 +22,11 @@
 {{-- @section('content') --}}
 <main class="profile_page">
     <div class="profile_page__image flex">
-        <img src="{{ asset('/assets/images/' . $podcaster->image) }}" alt="{{ $podcaster->name }}">
+        <img src="{{ 
+            str_contains($podcaster->image, 'http')
+                ? $podcaster->image
+                : asset('/assets/images/' . $podcaster->image)
+            }}" alt="{{ $podcaster->name }}">
         <div>
             <h3>{{ $podcaster->name }}</h3>
             <p>{{ $podcaster->email }}</p>
