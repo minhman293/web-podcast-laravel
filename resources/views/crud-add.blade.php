@@ -40,7 +40,7 @@
 
               <ul class="site-menu js-clone-nav d-none d-lg-block">
                 <li class="active">
-                  <a href="{{ route('index') }}">Home</a>
+                  <a href="{{ url('/') }}">Home</a>
                 </li>
                 <li class="has-children">
                   <a href="#">Dropdown</a>
@@ -52,17 +52,28 @@
                 </li>
                 <li><a href="{{ route('about') }}">About</a></li>
                 <li><a href="{{ route('contact') }}">Contact</a></li>
+
+
+
                 @auth
-                <li class="active"><a>Hello, {{ Auth::user()->name }}</a></li>
-                <li><a>
-                    <form method="POST" action="{{ route('logout') }}" class="logout-form">
-                      @csrf
-                      <button type="submit" class="logout-button">Logout</button>
-                    </form>
-                  </a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Hello, {{ Auth::user()->name }}
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="{{ route('podcasters.index', Auth::id()) }}">View profile</a>
+                        <a class="dropdown-item" href="{{ route('podcasters.edit', Auth::id()) }}">Update profile</a>
+                        <div class="dropdown-divider"></div>
+                        <form method="POST" action="{{ route('logout') }}" class="logout-form">
+                            @csrf
+                            <button type="submit" class="dropdown-item">Log out</button>
+                        </form>
+                    </div>
+                </li>
                 @else
                 <li><a href="{{ route('login') }}">Login</a></li>
                 @endauth
+
               </ul>
             </nav>
 
@@ -145,35 +156,19 @@
                       <input type="number" class="form-control" id="duration" name="duration" required>
                   </div>
 
+                  <!-- Thay đổi phần HTML cho audio và image uploads -->
                   <div class="form-group">
                       <label for="audio">Podcast Audio File (MP3)</label>
-                      <input type="file" class="form-control-file" id="audio" name="audio" accept="audio/mp3,audio/wav,audio/ogg" required>
-                      <small class="form-text text-muted">Maximum file size: 50MB</small>
+                      <button type="button" id="upload_audio" class="btn btn-secondary">Upload Audio</button>
+                      <input type="hidden" id="audio_url" name="audio" required>
+                      <small class="form-text text-muted" id="selected_audio"></small>
                   </div>
-                  <script>
-                    document.getElementById('audio').addEventListener('change', function(e) {
-                        const file = e.target.files[0];
-                        const audio = document.createElement('audio');
-                        const reader = new FileReader();
-
-                        reader.onload = function(e) {
-                            audio.src = e.target.result;
-                            
-                            // When audio metadata is loaded, get duration
-                            audio.addEventListener('loadedmetadata', function() {
-                                // Round duration to whole number
-                                const duration = Math.round(audio.duration);
-                                document.getElementById('duration').value = duration;
-                            });
-                        };
-
-                        reader.readAsDataURL(file);
-                    });
-                  </script>
 
                   <div class="form-group">
                       <label for="image">Podcast Image</label>
-                      <input type="file" class="form-control-file" id="image" name="image" accept="image/*" required>
+                      <button type="button" id="upload_image" class="btn btn-secondary">Upload Image</button>
+                      <input type="hidden" id="image_url" name="image" required>
+                      <small class="form-text text-muted" id="selected_image"></small>
                   </div>
 
                   <div class="d-flex justify-content-center mb-4">
@@ -246,6 +241,77 @@
         });
       }
     });
+  </script>
+
+  <!-- Add this in your <head> or before closing </body> -->
+  <script src="https://upload-widget.cloudinary.com/global/all.js"></script>
+
+  <!-- Your existing form HTML stays the same -->
+
+  <!-- Update JavaScript -->
+  <script>
+  // Initialize Cloudinary configuration
+  const cloudName = 'dkd1rcht5'; 
+  const uploadPreset = 'web-podcast';
+
+  // Create widgets first
+  const audioWidget = cloudinary.createUploadWidget({
+      cloudName: cloudName,
+      uploadPreset: uploadPreset,
+      sources: ['local'],
+      resourceType: 'auto',
+      folder: 'Podcast/audio',
+      maxFileSize: 52428800,
+      allowedFormats: ['mp3', 'wav', 'ogg']
+  }, (error, result) => {
+      if (error) {
+          console.error('Upload error:', error);
+          document.getElementById('selected_audio').textContent = 'Upload failed: ' + error.message;
+          return;
+      }
+      if (result.event === "success") {
+          const url = result.info.secure_url;
+          document.getElementById('audio_url').value = url;
+          document.getElementById('selected_audio').textContent = 'Audio uploaded: ' + result.info.original_filename;
+          
+          // Get duration
+          const audio = new Audio(url);
+          audio.addEventListener('loadedmetadata', () => {
+              document.getElementById('duration').value = Math.round(audio.duration);
+          });
+      }
+  });
+
+  const imageWidget = cloudinary.createUploadWidget({
+      cloudName: cloudName,
+      uploadPreset: uploadPreset,
+      sources: ['local'],
+      folder: 'Podcast/images',
+      maxFileSize: 2097152,
+      allowedFormats: ['jpg', 'png', 'jpeg']
+  }, (error, result) => {
+      if (error) {
+          console.error('Upload error:', error);
+          document.getElementById('selected_image').textContent = 'Upload failed: ' + error.message;
+          return;
+      }
+      if (result.event === "success") {
+          const url = result.info.secure_url;
+          document.getElementById('image_url').value = url;
+          document.getElementById('selected_image').textContent = 'Image uploaded: ' + result.info.original_filename;
+      }
+  });
+
+  // Add click handlers after widgets are created
+  document.addEventListener('DOMContentLoaded', function() {
+      document.getElementById('upload_audio').addEventListener('click', () => {
+          audioWidget.open();
+      });
+
+      document.getElementById('upload_image').addEventListener('click', () => {
+          imageWidget.open();
+      });
+  });
   </script>
 
 

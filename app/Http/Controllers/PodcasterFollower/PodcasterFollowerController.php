@@ -67,29 +67,6 @@ class PodcasterFollowerController extends Controller
         return redirect()->route('podcasters.index', $podcaster->id)->with('success', 'Successfully unsubscribed.');
     }
 
-    public function follow(Request $request)
-    {
-        $podcasterId = $request->input('podcaster_id');
-        $followerId = Auth::id();
-
-        // Kiểm tra xem người dùng đã follow podcaster chưa
-        $existingFollow = PodcasterFollower::withTrashed()->where('podcaster_id', $podcasterId)
-                                                        ->where('follower_id', $followerId)
-                                                        ->update(['deleted_at' => null]);
-
-        if (!$existingFollow) {
-            // Tạo mới dòng dữ liệu trong bảng podcaster_followers
-            PodcasterFollower::create([
-                'podcaster_id' => $podcasterId,
-                'follower_id' => $followerId,
-            ]);
-
-            return response()->json(['status' => 1, 'message' => 'Followed successfully.']);
-        }
-
-        return response()->json(['status' => 0, 'message' => 'Already followed.']);
-    }
-
     public function unfollow(Request $request)
     {
         $podcasterId = $request->input('podcaster_id');
@@ -101,5 +78,37 @@ class PodcasterFollowerController extends Controller
                          ->delete();
 
         return response()->json(['status' => 1, 'message' => 'Unfollowed successfully.']);
+    }
+
+    public function follow(Request $request)
+    {
+        $podcasterId = $request->input('podcaster_id');
+        $followerId = Auth::id();
+
+        // Prevent self-following
+        if ($podcasterId == $followerId) {
+            return response()->json([
+                'status' => 0, 
+                'message' => 'You cannot follow yourself.'
+            ]);
+        }
+
+        // Check existing follow
+        $existingFollow = PodcasterFollower::withTrashed()
+            ->where('podcaster_id', $podcasterId)
+            ->where('follower_id', $followerId)
+            ->update(['deleted_at' => null]);
+
+        if (!$existingFollow) {
+            PodcasterFollower::create([
+                'podcaster_id' => $podcasterId,
+                'follower_id' => $followerId,
+            ]);
+        }
+
+        return response()->json([
+            'status' => 1, 
+            'message' => 'Followed successfully.'
+        ]);
     }
 }

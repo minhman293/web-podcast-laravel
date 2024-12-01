@@ -12,6 +12,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Podcaster;
 
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
+
 use App\Routes;
 
 class PodcastController extends Controller
@@ -94,77 +96,28 @@ public function restore($id)
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'podcaster_id' => 'required|string',
-            'audio' => 'required|file|mimes:mp3,wav,ogg|max:51200', // 50MB max
-            'image' => 'required|image|mimes:jpeg,png,jpg|max:2048', // 2MB max
+            'audio' => 'required|string', // Changed to string for URL
+            'image' => 'required|string', // Changed to string for URL
             'category_id' => 'required|exists:categories,id',
         ]);
 
         try {
-            $podcasterId = Auth::user()->id;
-            // Handle audio file upload
-            if ($request->hasFile('audio')) {
-                $audioFile = $request->file('audio');
-                
-                // Verify the audio file is valid
-                if (!$audioFile->isValid()) {
-                    return back()->with('error', 'Invalid audio file')->withInput();
-                }
-
-                $audioFileName = time() . '_' . $audioFile->getClientOriginalName();
-                
-                // Make sure the directory exists
-                $audioPath = $audioFile->storeAs('public/podcasts/audio', $audioFileName);
-                
-                $request->merge(['podcaster_id' => $podcasterId]);
-
-                if (!$audioPath) {
-                    return back()->with('error', 'Failed to save audio file')->withInput();
-                }
-
-                $audioUrl = asset('storage/podcasts/audio/' . $audioFileName);
-            } else {
-                return back()->with('error', 'Audio file is required')->withInput();
-            }
-
-            // Handle image file upload
-            if ($request->hasFile('image')) {
-                $imageFile = $request->file('image');
-                
-                if (!$imageFile->isValid()) {
-                    return back()->with('error', 'Invalid image file')->withInput();
-                }
-
-                $imageFileName = time() . '_' . $imageFile->getClientOriginalName();
-                $imagePath = $imageFile->storeAs('public/podcasts/images', $imageFileName);
-                
-                if (!$imagePath) {
-                    return back()->with('error', 'Failed to save image file')->withInput();
-                }
-
-                $imageUrl = asset('storage/podcasts/images/' . $imageFileName);
-            } else {
-                return back()->with('error', 'Image file is required')->withInput();
-            }
-
-            // Create podcast
             $podcast = Podcast::create([
                 'title' => $request->title,
                 'description' => $request->description,
-                'audio' => $audioFileName,
-                'image' => $imageFileName,
+                'audio' => $request->audio, // Direct URL from Cloudinary
+                'image' => $request->image, // Direct URL from Cloudinary
                 'duration' => $request->duration,
                 'category_id' => $request->category_id,
-                'podcaster_id' => $request->podcaster_id, // Uncomment if you want to add a podcaster relationship to the podcast.
+                'podcaster_id' => Auth::user()->id,
             ]);
 
             return redirect()->route('podcast.crud')->with('success', 'Podcast added successfully!');
-
         } catch (\Exception $e) {
             \Log::error('Podcast upload error: ' . $e->getMessage());
-            return back()->with('error', 'Error uploading podcast: ' . $e->getMessage())->withInput();
+            return back()->with('error', 'Error creating podcast: ' . $e->getMessage())->withInput();
         }
     }
-
 
     public function deletePodcast($id)
     {
