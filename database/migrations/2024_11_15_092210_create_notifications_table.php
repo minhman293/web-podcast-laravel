@@ -15,10 +15,13 @@ return new class extends Migration
     {
         Schema::create('notifications', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('sender_id');
+            $table->unsignedBigInteger('receiver_id');
+            $table->unsignedBigInteger('podcast_id');
             $table->string('content');
             $table->timestamps();
-            $table->unsignedBigInteger('podcast_id');
-            $table->unsignedBigInteger('podcaster_id');
+            $table->boolean('is_seen');
+
 
             $table->foreign('podcast_id')
                 ->references('id')
@@ -26,11 +29,13 @@ return new class extends Migration
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
 
-            $table->foreign('podcaster_id')
+            $table->foreign('sender_id')
                 ->references('id')
-                ->on('podcasters')
-                ->onUpdate('cascade')
-                ->onDelete('cascade');
+                ->on('podcasters');
+
+            $table->foreign('receiver_id')
+                ->references('id')
+                ->on('podcasters');
         });
     }
 
