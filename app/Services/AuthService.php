@@ -78,6 +78,7 @@ class AuthService
                     'password' => 'SOCIAL_AUTHENTICATION',
                     'image' => $params->avatar,
                     $provider . '_id' => $params->id,
+                    'email_verified_at' => now()
                 ]
             );
         } catch (Exception $e) {

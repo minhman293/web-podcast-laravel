@@ -24,6 +24,7 @@ class PodcastersTableSeeder extends Seeder
                 'image' => null,
                 'google_id' => null,
                 'facebook_id' => null,
+                'email_verified_at' => now()
             ],
             [
                 'name' => 'Jane Smith',
@@ -32,6 +33,7 @@ class PodcastersTableSeeder extends Seeder
                 'image' => null,
                 'google_id' => null,
                 'facebook_id' => null,
+                'email_verified_at' => now()
             ],
             [
                 'name' => 'Alice Johnson',
@@ -40,6 +42,7 @@ class PodcastersTableSeeder extends Seeder
                 'image' => null,
                 'google_id' => null,
                 'facebook_id' => null,
+                'email_verified_at' => now()
             ],
             [
                 'name' => 'Bob Brown',
@@ -48,6 +51,7 @@ class PodcastersTableSeeder extends Seeder
                 'image' => null,
                 'google_id' => null,
                 'facebook_id' => null,
+                'email_verified_at' => now()
             ],
             [
                 'name' => 'Charlie Davis',
@@ -56,6 +60,7 @@ class PodcastersTableSeeder extends Seeder
                 'image' => null,
                 'google_id' => null,
                 'facebook_id' => null,
+                'email_verified_at' => now()
             ],
         ]);
     }

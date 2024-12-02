@@ -90,7 +90,7 @@ Route::middleware(['web'])->group(function () {
     Route::post('/unfollow', [PodcasterFollowerController::class, 'unfollow'])->name('unfollow');
 
 
-    Route::group(['prefix' => 'podcasters', 'as' => 'podcasters.'], function () {
+    Route::group(['prefix' => 'podcasters', 'as' => 'podcasters.', 'middleware' => 'verified'], function () {
         Route::get('/edit/{podcaster}', [PodcasterController::class, 'edit'])->name('edit');
         Route::put('/update/{podcaster}', [PodCasterController::class, 'update'])->name('update');
         Route::get('/{podcaster}', [PodCasterController::class, 'index'])->name('index');

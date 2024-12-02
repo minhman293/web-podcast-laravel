@@ -67,9 +67,10 @@ class AuthController extends Controller
             $request->user()->tokens()->delete();
             $cookie = cookie('token', '', -1);
             $this->authService->logout();
+            return redirect()->route('get_login')->cookie($cookie);
         }
 
-        return redirect()->route('get_login')->cookie($cookie);
+        return redirect()->route('get_login');
     }
 
     private function validateSocialProvider(string $provider)

@@ -49,8 +49,14 @@
               <ul class="list-unstyled">
                 @foreach($podcasters as $podcaster)
                   <li>
-                    <a href="#" class="d-flex align-items-center">
-                    <img src="{{ asset('assets/images/person_1.jpg') }}" alt="Image" class="img-fluid mr-2">
+                    <a href="{{ route('podcasters.index', $podcaster->id) }}" class="d-flex align-items-center">
+                    <img style="height: 50px" src="{{ 
+                        $podcaster->image
+                          ? (str_contains($podcaster->image, 'http')
+                                ? $podcaster->image
+                                : asset('assets/images/' . $podcaster->image))
+                          : asset('assets/images/default_avatar_profile_icon.jpg')
+                      }}" alt="Image" class="img-fluid mr-2">
                       <div class="podcaster">
                         <span class="d-block">{{ $podcaster->name }}</span>
                         <span class="small">{{ number_format($podcaster->podcasts_count) }} podcasts</span>
@@ -86,7 +92,7 @@
           @endforeach
 
           <!-- Pagination (nếu cần) -->
-          <div class="container" data-aos="fade-up">
+          {{-- <div class="container" data-aos="fade-up">
               <div class="row">
                   <div class="col-md-12 text-center">
                       <div class="site-block-27">
@@ -102,7 +108,7 @@
                       </div>
                   </div>
               </div>
-          </div>
+          </div> --}}
         </div>
       </div>
     </div>

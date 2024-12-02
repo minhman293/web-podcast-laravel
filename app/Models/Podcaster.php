@@ -22,7 +22,8 @@ class Podcaster extends Authenticatable implements MustVerifyEmail
         'password',
         'image',
         'google_id',
-        'facebook_id'
+        'facebook_id',
+        'email_verified_at'
     ];
 
     public function setPasswordAttribute($value)

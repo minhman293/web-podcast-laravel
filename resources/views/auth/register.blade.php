@@ -85,12 +85,12 @@
                                     <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" required>
                                 </div>
                             </div>
-                            <div class="form-group row">
+                            {{-- <div class="form-group row">
                                 <div class="col-md-12">
                                     <label for="avatar" class="text-black">User's picture</label>
                                     <input type="file" class="form-control" id="user_picture" name="user_picture">
                                 </div>
-                            </div>
+                            </div> --}}
 
                             <div class="form-group row">
                                 <div class="col-lg-12">
