@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>Podcast &mdash; Colorlib Website Template</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    @include('partials.styles')
-    
-  </head>
-  <body>
-  
+<head>
+  <title>Podcast &mdash; Colorlib Website Template</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  @include('partials.styles')
+
+</head>
+
+<body>
+
   <div class="site-wrap">
 
     <div class="site-mobile-menu">
@@ -22,47 +24,7 @@
     </div>
 
 
-    <header class="site-navbar py-4" role="banner">
-
-      <div class="container">
-        <div class="row align-items-center">
-          
-
-          <div class="col-3">
-            <h1 class="site-logo"><a href="index.html" class="h2">Podcast<span class="text-primary">.</span> </a></h1>
-          </div>
-          <div class="col-9">
-            <nav class="site-navigation position-relative text-right text-md-right" role="navigation">
-
-                
-
-                <div class="d-block d-lg-none ml-md-0 mr-auto"><a href="#" class="site-menu-toggle js-menu-toggle text-black"><span class="icon-menu h3"></span></a></div>
-
-                <ul class="site-menu js-clone-nav d-none d-lg-block">
-                  <li>
-                    <a href="index.html">Home</a>
-                  </li>
-                  <li class="has-children">
-                    <a href="#">Dropdown</a>
-                    <ul class="dropdown arrow-top">
-                      <li><a href="#">Menu One</a></li>
-                      <li><a href="#">Menu Two</a></li>
-                      <li><a href="#">Menu Three</a></li>
-                    </ul>
-                  </li>
-                  <li class="active"><a href="about.html">About</a></li>
-                  <li><a href="contact.html">Contact</a></li>
-                  <li><a href="login-register.html">Login / Register</a></li>
-                </ul>
-            </nav>
-
-
-          </div>
-
-        </div>
-      </div>
-      
-    </header>
+    @include('partials.header')
 
     <div class="site-blocks-cover inner-page-cover bg-light mb-5">
       <div class="container">
@@ -74,7 +36,7 @@
         </div>
       </div>
     </div>
-    
+
     <div class="site-section pt-3">
       <div class="container">
         <div class="row mb-5">
@@ -90,13 +52,13 @@
         </div>
         <div class="row  justify-content-around">
           <div class="col-md-12">
-            
-            <img src="{{ asset('assets/images/1x/asset-1.png') }}" alt="Image" class="img-fluid mb-5">    
+
+            <img src="{{ asset('assets/images/1x/asset-1.png') }}" alt="Image" class="img-fluid mb-5">
           </div>
         </div>
       </div>
     </div>
-    
+
 
     <div class="site-section pt-3">
       <div class="container">
@@ -137,8 +99,8 @@
         </div>
       </div>
     </div>
-    
-    <div class="site-blocks-cover overlay inner-page-cover" style="background-image: url({{ asset('assets/images/hero_bg_1.jpg') }});" data-aos="fade" data-stellar-background-ratio="0.5">
+
+    <div class="site-blocks-cover overlay inner-page-cover" style="background-image: url('assets/images/hero_bg_1.jpg');" data-aos="fade" data-stellar-background-ratio="0.5">
       <div class="container">
         <div class="row align-items-center justify-content-center text-center">
 
@@ -146,19 +108,19 @@
             <h2>Subscribe</h2>
             <p class="mb-5">Lorem ipsum dolor sit amet, consectetur adipisicing elit nihil saepe libero sit odio obcaecati veniam.</p>
             <form action="#" method="post" class="site-block-subscribe">
-                <div class="input-group mb-3">
-                  <input type="text" class="form-control border-secondary text-white bg-transparent" placeholder="Enter Email" aria-label="Enter Email" aria-describedby="button-addon2">
-                  <div class="input-group-append">
-                    <button class="btn btn-primary" type="button" id="button-addon2">Send</button>
-                  </div>
+              <div class="input-group mb-3">
+                <input type="text" class="form-control border-secondary text-white bg-transparent" placeholder="Enter Email" aria-label="Enter Email" aria-describedby="button-addon2">
+                <div class="input-group-append">
+                  <button class="btn btn-primary" type="button" id="button-addon2">Send</button>
                 </div>
-              </form>
+              </div>
+            </form>
           </div>
         </div>
       </div>
-    </div>  
+    </div>
 
-    
+
     <footer class="site-footer">
       <div class="container">
         <div class="row">
@@ -189,12 +151,15 @@
         <div class="row pt-5 mt-5 text-center">
           <div class="col-md-12">
             <p>
-            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-            Copyright &copy;<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="icon-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank" >Colorlib</a>
-            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+              <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+              Copyright &copy;<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+              <script>
+                document.write(new Date().getFullYear());
+              </script> All rights reserved | This template is made with <i class="icon-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+              <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
             </p>
           </div>
-          
+
         </div>
       </div>
     </footer>
@@ -203,26 +168,29 @@
   @include('partials.scripts')
 
   <script>
-      document.addEventListener('DOMContentLoaded', function() {
-                var mediaElements = document.querySelectorAll('video, audio'), total = mediaElements.length;
+    document.addEventListener('DOMContentLoaded', function() {
+      var mediaElements = document.querySelectorAll('video, audio'),
+        total = mediaElements.length;
 
-                for (var i = 0; i < total; i++) {
-                    new MediaElementPlayer(mediaElements[i], {
-                        pluginPath: 'https://cdn.jsdelivr.net/npm/mediaelement@4.2.7/build/',
-                        shimScriptAccess: 'always',
-                        success: function () {
-                            var target = document.body.querySelectorAll('.player'), targetTotal = target.length;
-                            for (var j = 0; j < targetTotal; j++) {
-                                target[j].style.visibility = 'visible';
-                            }
-                  }
-                });
-                }
-            });
-    </script>
+      for (var i = 0; i < total; i++) {
+        new MediaElementPlayer(mediaElements[i], {
+          pluginPath: 'https://cdn.jsdelivr.net/npm/mediaelement@4.2.7/build/',
+          shimScriptAccess: 'always',
+          success: function() {
+            var target = document.body.querySelectorAll('.player'),
+              targetTotal = target.length;
+            for (var j = 0; j < targetTotal; j++) {
+              target[j].style.visibility = 'visible';
+            }
+          }
+        });
+      }
+    });
+  </script>
 
 
   <script src="{{ asset('assets/js/main.js') }}"></script>
-    
-  </body>
+
+</body>
+
 </html>
